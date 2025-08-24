@@ -45,6 +45,13 @@
     - [Idea: decision boundary](#idea-decision-boundary)
     - [Tips for beginners (L5)](#tips-for-beginners-l5)
     - [At a glance: supervised vs unsupervised](#at-a-glance-supervised-vs-unsupervised)
+  - [Lecture 6: Unsupervised Learning (Part 1)](#lecture-6-unsupervised-learning-part-1)
+    - [Quick Summary (L6)](#quick-summary-l6)
+    - [What is unsupervised learning?](#what-is-unsupervised-learning)
+    - [Clustering basics](#clustering-basics)
+    - [Workflow diagram](#workflow-diagram-1)
+    - [Examples: news, genetics, customers](#examples-news-genetics-customers)
+    - [Beginner tips (L6)](#beginner-tips-l6)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -307,3 +314,59 @@ Classification is the other main type of supervised learning. Instead of predict
 - Classification: predict a category from a small set of options.
   - Examples: spam vs not spam, benign vs malignant, digit 0–9, clicked vs not clicked.
 >Tip: Look at your label y. Numbers with many possible values → regression. A few discrete labels → classification.
+
+---
+
+### Lecture 6: Unsupervised Learning (Part 1)
+
+### Quick Summary (L6)
+Unsupervised learning works without **labels (y)**. The algorithm looks at raw data (no “right answers”) and discovers **patterns** or **structure** on its own. A common task is **clustering**—grouping similar items together.
+
+### What is unsupervised learning?
+- **Input only data (x), no labels (y).**
+- **Goal:** find **patterns**, **groups**, or **structure** in the data.
+- Called **unsupervised** because we do not provide the “right answer” for each example.
+
+### Clustering basics
+- **Clustering** groups similar examples into **clusters** purely from the data.
+- **Clusters** are groups where points in the same group are similar to each other.
+- The **number of clusters** may be decided by the algorithm or specified by you.
+- **Output:** group assignments; there is no “correct label” provided ahead of time.
+
+### Workflow diagram
+
+```mermaid
+graph LR
+  A[Unlabeled data] --> B[Clustering algorithm]
+  B --> C[Cluster 1]
+  B --> D[Cluster 2]
+  B --> E[Cluster 3]
+```
+
+### Example: patients without labels
+- **Dataset:** patient tumor size and age, but without labels like benign or malignant.
+- **Task:** find **natural groups** (clusters) in the data.
+- The algorithm might find two or more clusters indicating different types or categories, even without knowing what they represent.
+- The algorithm groups data into clusters:
+    - **Group 1** (possible benign)
+    - **Group 2** (possible malignant)
+
+![Unsupervised example: clusters by size and age](assets/unsupervised_example.png)
+### Examples: news, genetics, customers
+- **News articles (Google News):** Every day, thousands of articles are published. **Clustering** groups related stories by shared words (e.g., “**panda**,” “**twins**,” “**zoo**”). No one hard‑codes topics—the algorithm discovers them automatically.
+
+![Google News clustering: related articles grouped by shared words](assets/google_news_u.png)
+
+
+- **Genetics (DNA microarray):** Group people by similar **gene activity** patterns to reveal **types/subgroups** without pre‑labeled categories. Each **row = gene**, **column = individual**. Applications: discovering genetic traits, disease types, etc.
+
+![DNA microarray clustering: gene expression heatmap by individual](assets/dna_microarray.png)
+
+- **Customers (market segmentation):** Group users into **segments** (e.g., skill growth, career change, stay‑updated) to tailor products and communication.
+
+![Market segmentation clustering: customer groups by motivation](assets/market_segmentation.png)
+
+### Beginner tips (L6)
+- Use **unsupervised learning** when you don’t have labels but still want insights (**groups**, **anomalies**, **structure**).
+- **Clustering** is for “who is similar to whom?” questions. Choose **features** that reflect meaningful similarity.
+- Start simple (e.g., **k‑means**) and check if clusters make sense to domain experts.
