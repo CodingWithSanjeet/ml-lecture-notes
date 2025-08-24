@@ -27,15 +27,24 @@
     - [Tools vs know-how](#tools-vs-know-how)
     - [Next steps (L3)](#next-steps-l3)
   - [Lecture 4: Supervised Learning (Part 1)](#lecture-4-supervised-learning-part-1)
-    - [Quick summary (L4)](#quick-summary-l4)
+    - [Quick Summary (L4)](#quick-summary)
     - [What is supervised learning?](#what-is-supervised-learning)
-    - [Common applications (x → y)](#common-applications-x--y)
-    - [Example: Predict house price (regression)](#example-predict-house-price-regression)
-    - [Choosing model complexity](#choosing-model-complexity)
-    - [Workflow diagram](#workflow-diagram)
-    - [Key terms (L4)](#key-terms-l4)
-    - [Regression vs Classification](#regression-vs-classification)
-    - [How to regenerate the figure](#how-to-regenerate-the-figure)
+    - [Two types: Regression and Classification](#two-types-regression-and-classification)
+    - [Common x→y examples](#common-xy-examples)
+    - [Example: predict house price](#example-predict-house-price)
+    - [Pick the right model complexity](#pick-the-right-model-complexity)
+    - [How training works](#how-training-works)
+    - [Key words (L4)](#key-words-l4)
+    - [Regression vs classification (which to use?)](#regression-vs-classification-which-to-use)
+    - [Regenerate the figure](#regenerate-the-figure)
+  - [Lecture 5: Supervised Learning (Part 2)](#lecture-5-supervised-learning-part-2)
+    - [Quick Summary (L5)](#quick-summary-1)
+    - [What is classification?](#what-is-classification)
+    - [Binary vs multi-class](#binary-vs-multi-class)
+    - [Build intuition: 1D and 2D](#build-intuition-1d-and-2d)
+    - [Idea: decision boundary](#idea-decision-boundary)
+    - [Tips for beginners (L5)](#tips-for-beginners-l5)
+    - [At a glance: supervised vs unsupervised](#at-a-glance-supervised-vs-unsupervised)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -78,10 +87,7 @@ Machine learning (ML) is the science of getting computers to learn from data wit
 - **Definition to remember**: Getting computers to learn without explicit programming.
 - **You will build**: Practical ML implementations as part of this course.
 
-### Next steps (L1)
-In upcoming lessons, we’ll formalize core concepts (data, features, labels), outline the ML workflow, and begin implementing your first models.
-
-
+---
 
 ### Lecture 2: Applications of Machine Learning
 
@@ -115,8 +121,7 @@ This lecture surveys why ML has become the dominant approach for many AI problem
 - The combination of data, compute, and mature methods makes ML broadly practical.
 - Learning these skills opens doors to contribute across diverse, impactful application areas.
 
-### Next steps (Course)
-Next, we’ll formalize a definition of machine learning, introduce the main types of ML problems and algorithms, and build your core terminology so you know when each approach may be appropriate.
+---
 
 ### Lecture 3: What is Machine Learning
 
@@ -145,12 +150,13 @@ Machine learning enables computers to learn from data without being explicitly p
 - Like having advanced tools, knowing the practical recipes and best practices lets you build real, valuable ML systems.
 - Common mistake: Experienced teams sometimes spend months on approaches that won’t work. Knowing best practices helps avoid wasted effort.
 
-### Next steps (L3)
-Next, we’ll define supervised vs. unsupervised learning more formally and discuss when to use each.
+
+
+---
 
 ### Lecture 4: Supervised Learning (Part 1)
 
-### Quick summary (L4)
+### Quick Summary
 Supervised learning learns a mapping from inputs x to outputs y using example pairs (x, y). After training on many labeled examples, the model predicts y for new x. Two major problem types: regression (predict a number) and classification (predict a category).
 
 ### What is supervised learning?
@@ -159,7 +165,13 @@ Supervised learning learns a mapping from inputs x to outputs y using example pa
 - You give the algorithm examples with the “right answer” (labels y) for each input x.
 - The model learns a function f that maps x → y and can generalize to unseen x.
 
-### Common applications (x → y)
+### Two types: Regression and Classification
+- **Regression**: Predict a number with many possible values.
+  - Examples: house price, temperature, sales next week.
+- **Classification**: Predict a category from a small set of labels.
+  - Examples: spam vs not spam, benign vs malignant, digit 0–9.
+
+### Common x→y examples
 - Email: Input is an email (x), output is whether it's spam or not (y). (classification)
 - Speech recognition: Input is an audio clip, output is the transcript (text).
 - Machine translation: Input is English text, output is translated text.
@@ -176,7 +188,7 @@ Supervised learning learns a mapping from inputs x to outputs y using example pa
 | image, radar info | position of other cars | self-driving car |
 | image of phone | defect? (0/1) | visual inspection |
 
-### Example: Predict house price (regression)
+### Example: predict house price
 - Input x: house size (sq ft). Output y: price (dollars).
 - Fit a simple model (e.g., a straight line) or a more flexible curve to the data.
 - Use the model to predict the price for a new house size (e.g., 750 sq ft).
@@ -189,12 +201,12 @@ Housing price vs. size (conceptual)
 
 
 
-### Choosing model complexity
+### Pick the right model complexity
 - Straight line = simpler, less flexible; curve = more flexible.
 - Goal is not to pick the line that gives the “best” answer for one example, but to choose complexity that generalizes well.
 - Later you’ll learn how to select appropriate complexity systematically (avoid under/overfitting).
 
-### Workflow diagram
+### How training works
 
 ```mermaid
 flowchart LR
@@ -205,22 +217,93 @@ flowchart LR
   E --> B
 ```
 
-### Key terms (L4)
+### Key words (L4)
 - **Supervised learning:** Learn x → y from labeled examples.
 - **Label (y):** The correct answer for an input x.
 - **Regression:** Predict a continuous number (e.g., house price).
 - **Classification:** Predict a category/class (e.g., spam vs not spam).
 
-### Regression vs Classification
+### Regression vs classification (which to use?)
 - If the answer you want is a number that can smoothly go up or down, use regression.
   - Examples: price, temperature, time to deliver, demand next week.
 - If the answer is a label from a small set of choices, use classification.
   - Examples: spam or not, disease A/B/C, clicked or not, defect yes/no.
 - Quick check: Look at your label y. Numbers with many possible values → regression. A few named categories (or 0/1) → classification.
 
-### How to regenerate the figure
+### Regenerate the figure
 - Open a terminal in the project root and run:
   - Windows PowerShell:
     - `python -m pip install -r "Module 1/script/requirements.txt"`
     - `python "Module 1/script/generate_regression_plot.py"`
 - The image will be saved to `Module 1/assets/regression_price_prediction.png` and is referenced above.
+
+---
+
+### Lecture 5: Supervised Learning (Part 2)
+
+### Quick Summary
+Classification is the other main type of supervised learning. Instead of predicting a number (regression), you predict a category from a small set of options (e.g., benign vs malignant). You can have two classes (binary) or more (multi‑class). Intuitively, the model learns a boundary that separates classes based on input features.
+
+### What is classification?
+- Classification is a type of supervised learning where the goal is to predict categories (also called classes or labels).
+- Unlike regression which predicts numbers (often infinitely many possible values), classification predicts a small set of possible outputs.
+- Learns x → y where y is a category/label, not a continuous number.
+- Output examples: benign/malignant, spam/not‑spam, cat/dog, digit 0–9.
+- Labels can be written as numbers (0,1,2,…) but they represent categories.
+
+### Example: Breast Cancer Detection
+- Task: Use patient data to classify tumors as:
+    - Benign (0): Not cancerous, not dangerous
+
+    - Malignant (1): Cancerous, potentially dangerous
+
+- Input features could be tumor size, patient age, cell uniformity, etc.
+
+- Graphically, the tumor size might map to either category 0 or 1.
+
+### Examples of Classification
+- Spam detection (spam / not spam)
+- Image recognition (cat / dog / bird / etc.)
+- Medical diagnosis (benign / malignant tumors)
+- Customer purchase behavior (will buy / won’t buy)
+
+### Binary vs multi-class
+- **Binary classification:** only two choices.
+  - Examples: benign vs malignant, spam vs not spam, fraud vs not fraud.
+
+![Classification: Breast Cancer Detection](assets/binary_classification.png)
+
+
+- **Multi‑class classification:** three or more choices.
+  - Examples: cancer type 0/1/2, animal cat/dog/bird, review sentiment negative/neutral/positive.
+
+![Classification: Multi-Class Classification](assets/multi_class_tumor_graph_fixedlegend.png)
+
+
+
+### Build intuition: 1D and 2D
+- 1D feature (e.g., tumor size): plot points on a line, labels 0 or 1.
+![Classification: Breast Cancer Detection](assets/classification_benign_malignant_adjusted.png)
+- 2D features (e.g., age and tumor size): plot points on a plane; circles vs crosses show classes.
+![Classification: Multi-Class Classification](assets/two_scenario_features.png)
+- Real problems often use many features (dozens to hundreds) like cell shape and texture.
+
+### Idea: decision boundary
+- The learning algorithm finds a boundary that best separates classes.
+- New examples are classified by which side of the boundary they fall on.
+- Boundaries can be straight (linear) or curved (nonlinear), depending on the model.
+
+![Classification: Multi-Class Classification](assets/malignant_vs_benign.png)
+![Classification: Multi-Class Classification](assets/malignant_vs_benign1.png)
+
+### Tips for beginners (L5)
+- If your target has a few named options → classification; if it’s a wide‑range number → regression.
+- Start simple (linear models) and add complexity if needed.
+- Always check class balance; if one class is rare, use metrics beyond accuracy (e.g., precision/recall).
+
+### At a glance: supervised vs unsupervised
+- Regression: predict a number from infinitely many possible values.
+  - Examples: house price, temperature tomorrow, time to deliver a package.
+- Classification: predict a category from a small set of options.
+  - Examples: spam vs not spam, benign vs malignant, digit 0–9, clicked vs not clicked.
+>Tip: Look at your label y. Numbers with many possible values → regression. A few discrete labels → classification.
