@@ -52,6 +52,11 @@
     - [Workflow diagram](#workflow-diagram-1)
     - [Examples: news, genetics, customers](#examples-news-genetics-customers)
     - [Beginner tips (L6)](#beginner-tips-l6)
+  - [Lecture 7: Unsupervised Learning (Part 2)](#lecture-7-unsupervised-learning-part-2)
+    - [Quick Summary (L7)](#quick-summary-l7)
+    - [Formal definition](#formal-definition)
+    - [Types of Unsupervised Learning](#types-of-unsupervised-learning)
+    - [Is this UL or SL? Examples](#is-this-ul-or-sl-examples)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -370,3 +375,28 @@ graph LR
 - Use **unsupervised learning** when you don’t have labels but still want insights (**groups**, **anomalies**, **structure**).
 - **Clustering** is for “who is similar to whom?” questions. Choose **features** that reflect meaningful similarity.
 - Start simple (e.g., **k‑means**) and check if clusters make sense to domain experts.
+
+---
+
+### Lecture 7: Unsupervised Learning (Part 2)
+
+### Quick Summary (L7)
+Unsupervised learning uses data with inputs **x only** (no labels **y**). The goal is to discover **structure**. Beyond **clustering**, two important types are **anomaly detection** (find unusual points) and **dimensionality reduction** (compress data while keeping key information).
+
+### Formal definition
+- **Supervised:** have **(x, y)** pairs; learn mapping **x → y**.
+- **Unsupervised:** have **x only**; learn patterns or structure in **x**.
+
+### Types of Unsupervised Learning
+- **Clustering:** Groups data points into clusters based on similarity. Commonly used in applications such as:
+    - Grouping news articles by topic (e.g., Google News).
+    - Market segmentation by customer behavior.
+    - Biological data grouping like genetic types.
+- **Anomaly Detection:** find **unusual** or **rare** events (e.g., credit card **fraud**).
+- **Dimensionality Reduction:** **compress** high‑dimensional data into fewer dimensions while keeping the most **important information**.
+
+### Is this UL or SL? Examples
+- **Spam filtering:** if emails are labeled spam/not spam → **Supervised** (classification).
+- **Google News topic grouping:** group related articles by shared words → **Unsupervised** (**clustering**).
+- **Market segmentation:** find customer groups from behavior data → **Unsupervised** (**clustering**).
+- **Diagnosing diabetes:** labeled examples diabetes/not diabetes → **Supervised** (classification), similar to the **breast cancer** example.
