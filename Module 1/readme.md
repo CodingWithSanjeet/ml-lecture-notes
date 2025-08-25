@@ -71,6 +71,15 @@
     - [Intuition: best-fitting line](#intuition-best-fitting-line)
     - [Generated figure](#generated-figure-1)
     - [Beginner tips (L8)](#beginner-tips-l8)
+  - [Lecture 9: Linear Regression Model (Part 2)](#lecture-9-linear-regression-model-part-2)
+    - [Quick Summary (L9)](#quick-summary-l9)
+    - [Training Set: Inputs and Outputs](#training-set-inputs-and-outputs)
+    - [From training set to model f](#from-training-set-to-model-f)
+    - [Prediction vs target: y-hat vs y](#prediction-vs-target-y-hat-vs-y)
+    - [Linear model form: f(x) = w x + b](#linear-model-form-fx--w-x--b)
+    - [Why Use Linear Functions?](#why-use-linear-functions)
+    - [Workflow diagram](#workflow-diagram-2)
+    - [What’s next: cost function](#whats-next-cost-function)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -495,6 +504,72 @@ Example (1250 sq ft prediction)
 - Start with a **single feature** to build intuition; add more features later.
 - Don’t overthink the formula. Focus on: line goes up → larger x predicts larger y (**positive slope**); line goes down → **negative slope**.
 - If predictions look off in a region, consider a **curve** (polynomial) or more **features**.
+
+---
+
+### Lecture 9: Linear Regression Model (Part 2)
+
+### Quick Summary (L9)
+Supervised learning takes a **training set** with inputs **x** and targets **y**, and learns a **function f (the model)** that maps x → **ŷ** (y‑hat, the **prediction**). For linear regression, we use a **straight line**: **f(x) = w x + b**. Next, we’ll design a **cost function** to measure how good the line is.
+
+###  Training Set: Inputs and Outputs
+- A supervised learning algorithm requires a **training set** that contains both:
+    - **Input features** (e.g., size of the house)
+    - **Output targets** (e.g., price of the house)
+- Outputs (**targets**) are the **right answers** the model will learn from.
+
+### From training set to model f
+- **Input:** training set with both **features x** (e.g., house size) and **targets y** (e.g., price).
+- **Training:** feed (x, y) to a **learning algorithm** to produce a **function f** (the **model**).
+- **Use:** given a new **x**, the model outputs a **prediction ŷ = f(x)**.
+
+
+
+```mermaid
+graph LR
+  A[Training set x and y] --> B[Learning algorithm]
+  B --> C[Model f]
+  D[New input x] --> C
+  C --> E[Prediction ŷ y_hat]
+```
+<br/>
+
+![Linear regression: price vs size](assets/training_model.png)
+
+
+### Prediction vs target: y-hat vs y
+- **y (target):** the **true target value** in the dataset (known only 
+for training examples; unknown for a new 
+house until sold).
+- **ŷ (y‑hat, prediction):** the model’s **estimate** of y.
+
+### Linear model form: f(x) = w x + b
+- We write the linear function as **f(x) = w · x + b**.
+- **w** (weight/slope) controls how much **y** changes per unit change in **x**
+- **b** (bias/intercept) shifts the line up/down.
+- Notation variants: **\(f(x)\)** or **\(f_{w,b}(x)\)** mean the same function with parameters **\(w, b\)**.
+- This **\(f_{w,b}(x)\)** of **x** means **f** is a function that takes **x** as input, and depending on the values of **w** and **b**, **f** will output some value of a prediction **ŷ (y-hat)**.
+
+![Linear regression: price vs size](assets/linear_regression_model.png)
+
+### Why Use Linear Functions?
+- A **linear** model is easy to train and reason about; it’s a strong **foundation** before moving to non‑linear curves.
+- You can later extend to **polynomials** or **multiple features** (number of bedrooms, location, etc.).
+
+### Workflow diagram
+```mermaid
+graph LR
+  A[Training set x and y] --> B[Learning algorithm]
+  B --> C[Model f x = w x + b]
+  C --> D[Prediction y_hat]
+  D --> E[Compare y_hat vs y gives cost]
+```
+
+### What’s next: cost function
+- We need a **cost function** to quantify how far **ŷ** is from **y** across all training examples.
+- **Minimizing** this cost will choose the best **w** and **b**.
+
+---
 
 How to regenerate the figure (Windows PowerShell)
 - `python -m pip install -r "Module 1/script/requirements.txt"`
