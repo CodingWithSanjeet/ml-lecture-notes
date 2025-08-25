@@ -57,6 +57,20 @@
     - [Formal definition](#formal-definition)
     - [Types of Unsupervised Learning](#types-of-unsupervised-learning)
     - [Is this UL or SL? Examples](#is-this-ul-or-sl-examples)
+  - [Lecture 8: Linear Regression Model (Part 1)](#lecture-8-linear-regression-model-part-1)
+    - [Quick Summary (L8)](#quick-summary-l8)
+    - [What is a linear regression model?](#what-is-a-linear-regression-model)
+    - [Regression vs classification (recap)](#regression-vs-classification-recap)
+    - [Why is it Supervised Learning?](#why-is-it-supervised-learning)
+    - [Notation (Standard ML Terminology)](#notation-standard-ml-terminology)
+    - [Plot and table view](#plot-and-table-view)
+    - [Text data table (sample rows)](#text-data-table-sample-rows)
+    - [How to read the table (text-only examples)](#how-to-read-the-table-text-only-examples)
+    - [Train then predict (client's house)](#train-then-predict-clients-house)
+    - [Generated example (1250 sq ft prediction)](#generated-example-1250-sq-ft-prediction)
+    - [Intuition: best-fitting line](#intuition-best-fitting-line)
+    - [Generated figure](#generated-figure-1)
+    - [Beginner tips (L8)](#beginner-tips-l8)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -400,3 +414,90 @@ Unsupervised learning uses data with inputs **x only** (no labels **y**). The go
 - **Google News topic grouping:** group related articles by shared words → **Unsupervised** (**clustering**).
 - **Market segmentation:** find customer groups from behavior data → **Unsupervised** (**clustering**).
 - **Diagnosing diabetes:** labeled examples diabetes/not diabetes → **Supervised** (classification), similar to the **breast cancer** example.
+
+---
+
+### Lecture 8: Linear Regression Model (Part 1)
+
+### Quick Summary (L8)
+**Linear regression** fits a **straight line** to relate an input **x** (e.g., house size) to an output **y** (e.g., price). Using a **Portland housing dataset** (size vs price), we learn the line and then **predict** price for a new size.
+
+### What is a linear regression model?
+- Linear Regression is one of the most widely used supervised learning models..
+- It fits a straight line to training data, modeling the relationship between input and output.
+- Input example: size of a house (in square feet).
+- Output example: price of the house (in thousands of dollars).
+
+### Regression vs classification (recap)
+- **Regression** outputs a **number** (infinitely many possibilities), e.g., price $220,000.
+- **Classification** outputs a **category** (small, discrete set), e.g., cat vs dog, or one of 10 diagnoses.
+
+### Why is it Supervised Learning?
+- Because the training data includes both:
+    - Input (x): house size
+    - Output (y): house price
+- The model is trained on labeled data: each training example contains input `x (house size)` and correct output `y (house price)`.
+- Model learns from examples with the **“right answers”** provided.
+
+### Plot and table view
+- Two views of the same data:
+  - **Plot view:** each cross is a house (size on x‑axis, price on y‑axis).
+  - **Table view:** each row has **size (x)** and **price (y)**.
+
+    ![House sizes and prices with data table](assets/linear_regression_plot_with_table.png)
+    
+### Notation (Standard ML Terminology)
+![Training set and notation overview](assets/training_set_notation.png)
+- **x**: input feature (house size in sq ft)
+- **y**: target value (price in $1000s)
+- **Training set:** many **(x, y)** pairs used to train the model.
+- **m**: total number of training examples (e.g., **m = 47** in the Portland set).
+- Single example: **(x, y)**, e.g., **(2104, 400)**.
+- i‑th example notation: \(x^{(i)}\) and \(y^{(i)}\) mean the values from row i.
+
+>Note: the superscript (i) is an **index**, not an exponent.
+
+### Train then predict (client's house)
+- Your **client’s house** is not in the training set (not yet sold → unknown price).
+- Workflow: **train** on known sales (training set) → **predict** the client’s price using the learned line.
+- Example from the lecture: if **x = 1250 sq ft**, the model predicts roughly **$227k** by reading off the best‑fit line.
+
+Example (1250 sq ft prediction)
+![Linear regression prediction at 1250 sq ft](assets/linear_regression_pred_1250.png)
+
+### Text data table (sample rows)
+
+| i | x (size in sq ft) | y (price in $1000s) |
+| --- | --- | --- |
+| 1 | 2104 | 400 |
+| 2 | 1416 | 232 |
+| 3 | 1534 | 315 |
+| 4 | 852 | 178 |
+| … | … | … |
+| 47 | 3210 | 870 |
+
+### How to read the table (text-only examples)
+- There are **m = 47** training examples (rows).
+- The first example is \((x^{(1)}, y^{(1)}) = (2104, 400)\): a 2,104 sq ft house sold for $400k.
+- The second example is \((x^{(2)}, y^{(2)}) = (1416, 232)\): a 1,416 sq ft house sold for $232k.
+- Each row provides a **correct answer** (label **y**) for its **input** (feature **x**). The model learns a line that best fits all these pairs.
+
+### Intuition: best-fitting line
+- Many lines are possible; choose the one that **minimizes error** between predictions and actual prices.
+- Visually: pick the line that stays **closest to the cloud of points** across the dataset.
+
+### Generated figure
+![Linear regression: price vs size](assets/linear_regression_price_vs_size.png)
+
+
+### Beginner tips (L8)
+- **Supervised vs classification reminder:** Linear regression is **supervised** and solves a **regression** problem (outputs a number). **Classification** outputs categories (e.g., cat/dog).
+- Start with a **single feature** to build intuition; add more features later.
+- Don’t overthink the formula. Focus on: line goes up → larger x predicts larger y (**positive slope**); line goes down → **negative slope**.
+- If predictions look off in a region, consider a **curve** (polynomial) or more **features**.
+
+How to regenerate the figure (Windows PowerShell)
+- `python -m pip install -r "Module 1/script/requirements.txt"`
+- `python "Module 1/script/generate_linear_regression_plot.py"`
+ - `python "Module 1/script/generate_linear_regression_with_table.py"`
+ - `python "Module 1/script/generate_linear_regression_pred_1250.py"`
