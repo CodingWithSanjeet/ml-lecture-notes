@@ -615,7 +615,7 @@ To train linear regression, we measure how good a line is with a **cost function
     - A **high score** means predictions are far from the real values (bad fit).
 
 ### Parameters w and b
-- Model: **\(f_{w,b}(x)\) = w x + b**. The numbers **w** and **b** are the model **parameters** (also called **weights** or **coefficients**).
+- Model: **f<sub>w,b</sub>(x) = w x + b**. The numbers **w** and **b** are the model **parameters** (also called **weights** or **coefficients**).
 - Changing **w** changes the **slope**; changing **b** moves the line up/down (**y‑intercept**).
 
 Training set snapshot (for intuition)
@@ -628,8 +628,8 @@ Training set snapshot (for intuition)
 | 852 | 178 |
 
 Model equation
-- \(f_{w,b}(x) = w\,x + b\)
-- Given **x**, the model outputs the **prediction** \(\hat{y} = f_{w,b}(x)\).
+- f<sub>w,b</sub>(x) = w x + b
+- Given x, the model outputs the prediction ŷ = f<sub>w,b</sub>(x).
 
 w and b variations (generated)
 ![Effect of w and b on f(x)](assets/linear_variations_w_b.png)
@@ -638,14 +638,22 @@ w and b variations (generated)
 ![Effect of w and b on f(x)](assets/linear_regression_w_b.png)
 
 ### Errors and squared error
-- For example \(i\): prediction is **\(\hat{y}^{(i)} = f(x^{(i)}) = w x^{(i)} + b\)**.
-- **Error** for example \(i\): **\(\hat{y}^{(i)} - y^{(i)}\)**.
-- **Squared error**: **\((\hat{y}^{(i)} - y^{(i)})^2\)**. Squaring keeps errors positive (no canceling out) and penalizes large mistakes.
+- For example (i): prediction is **ŷ<sup>(i)</sup> = f(x<sup>(i)</sup>) = w · x<sup>(i)</sup> + b**.
+- **Error** for example (i): **ŷ<sup>(i)</sup> − y<sup>(i)</sup>**.
+- **Squared error**: **(ŷ<sup>(i)</sup> − y<sup>(i)</sup>)<sup>2</sup>**. Squaring keeps errors positive (no canceling out) and penalizes large mistakes.
 
 ### Cost function J(w,b)
 - Over **m** examples, average the squared errors:
-- \( J(w,b) = \dfrac{1}{2m} \sum_{i=1}^{m} (\, f(x^{(i)}) - y^{(i)} \,)^2 \)
-- Equivalent using \(\hat{y}\): \( J(w,b) = \dfrac{1}{2m} \sum_{i=1}^{m} (\, \hat{y}^{(i)} - y^{(i)} \,)^2 \)
+
+```math
+J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( f(x^{(i)}) - y^{(i)} \big)^2
+```
+
+- Equivalent using $\hat{y}$:
+
+```math
+J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( \hat{y}^{(i)} - y^{(i)} \big)^2
+```
 
 ### What are w and b?
 - **w (slope/weight)**: how fast the prediction changes when **x** increases by 1. Bigger **w** → steeper upward line; negative **w** → line slopes downward.
@@ -655,16 +663,19 @@ w and b variations (generated)
 ![w and b explainer](assets/w_b_explainer.png)
 
 ### How it works (step‑by‑step)
-- **Prediction**: for each example \(i\), compute **\(\hat{y}^{(i)} = f(x^{(i)})\)** using the current **\(w, b\)**.
-- **Error**: The error is the difference between the predicted value and the true value **(\(\hat{y}^{(i)} - y^{(i)}\))**.
-- **Squaring**: The error is squared  **\((\hat{y}^{(i)} - y^{(i)})^2\)** so that negatives/positives don’t cancel out and large mistakes count more than small ones..
+- **Prediction**: for each example (i), compute **ŷ<sup>(i)</sup> = f(x<sup>(i)</sup>)** using the current **w, b**.
+- **Error**: The error is the difference between the predicted value and the true value **(ŷ<sup>(i)</sup> − y<sup>(i)</sup>)**.
+- **Squaring**: The error is squared **(ŷ<sup>(i)</sup> − y<sup>(i)</sup>)<sup>2</sup>** so that negatives/positives don’t cancel out and large mistakes count more than small ones.
 - **Averaging**: average the squared errors over **m** examples to evaluate overall fit.
 
 Cost function formula
-\[ J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( f(x^{(i)}) - y^{(i)} \big)^2 \]
+
+```math
+J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( f(x^{(i)}) - y^{(i)} \big)^2
+```
 - **m**: number of training examples.
-- **\(f(x^{(i)})\)**: prediction for example **i**.
-- The **\(1/(2m)\)** factor is conventional and makes calculus cleaner later.
+- **f(x<sup>(i)</sup>)**: prediction for example **i**.
+- The **1/(2m)** factor is conventional and makes calculus cleaner later.
 
 ![Cost Function](assets/cost_function.png)
 
