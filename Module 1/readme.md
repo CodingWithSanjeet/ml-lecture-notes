@@ -57,29 +57,43 @@
     - [Formal definition](#formal-definition)
     - [Types of Unsupervised Learning](#types-of-unsupervised-learning)
     - [Is this UL or SL? Examples](#is-this-ul-or-sl-examples)
-  - [Lecture 8: Linear Regression Model (Part 1)](#lecture-8-linear-regression-model-part-1)
-    - [Quick Summary (L8)](#quick-summary-l8)
-    - [What is a linear regression model?](#what-is-a-linear-regression-model)
-    - [Regression vs classification (recap)](#regression-vs-classification-recap)
-    - [Why is it Supervised Learning?](#why-is-it-supervised-learning)
-    - [Notation (Standard ML Terminology)](#notation-standard-ml-terminology)
-    - [Plot and table view](#plot-and-table-view)
-    - [Text data table (sample rows)](#text-data-table-sample-rows)
-    - [How to read the table (text-only examples)](#how-to-read-the-table-text-only-examples)
-    - [Train then predict (client's house)](#train-then-predict-clients-house)
-    - [Generated example (1250 sq ft prediction)](#generated-example-1250-sq-ft-prediction)
-    - [Intuition: best-fitting line](#intuition-best-fitting-line)
-    - [Generated figure](#generated-figure-1)
-    - [Beginner tips (L8)](#beginner-tips-l8)
-  - [Lecture 9: Linear Regression Model (Part 2)](#lecture-9-linear-regression-model-part-2)
-    - [Quick Summary (L9)](#quick-summary-l9)
-    - [Training Set: Inputs and Outputs](#training-set-inputs-and-outputs)
-    - [From training set to model f](#from-training-set-to-model-f)
-    - [Prediction vs target: y-hat vs y](#prediction-vs-target-y-hat-vs-y)
-    - [Linear model form: f(x) = w x + b](#linear-model-form-fx--w-x--b)
-    - [Why Use Linear Functions?](#why-use-linear-functions)
-    - [Workflow diagram](#workflow-diagram-2)
-    - [What’s next: cost function](#whats-next-cost-function)
+  - [Lecture 8: Linear Regression With One Variable](#lecture-8-linear-regression-with-one-variable)
+    - [Linear Regression Model (Part 1)](#linear-regression-model-part-1)
+      - [Quick Summary (L8)](#quick-summary-l8)
+      - [What is a linear regression model?](#what-is-a-linear-regression-model)
+      - [Regression vs classification (recap)](#regression-vs-classification-recap)
+      - [Why is it Supervised Learning?](#why-is-it-supervised-learning)
+      - [Notation (Standard ML Terminology)](#notation-standard-ml-terminology)
+      - [Plot and table view](#plot-and-table-view)
+      - [Text data table (sample rows)](#text-data-table-sample-rows)
+      - [How to read the table (text-only examples)](#how-to-read-the-table-text-only-examples)
+      - [Train then predict (client's house)](#train-then-predict-clients-house)
+      - [Generated example (1250 sq ft prediction)](#generated-example-1250-sq-ft-prediction)
+      - [Intuition: best-fitting line](#intuition-best-fitting-line)
+      - [Generated figure](#generated-figure-1)
+      - [Beginner tips (L8)](#beginner-tips-l8)
+  - [Lecture 9: Linear Regression With One Variable](#lecture-9-linear-regression-with-one-variable)
+    - [Linear Regression Model (Part 2)](#linear-regression-model-part-2)
+      - [Quick Summary (L9)](#quick-summary-l9)
+      - [Training Set: Inputs and Outputs](#training-set-inputs-and-outputs)
+      - [From training set to model f](#from-training-set-to-model-f)
+      - [Prediction vs target: y-hat vs y](#prediction-vs-target-y-hat-vs-y)
+      - [Linear model form: f(x) = w x + b](#linear-model-form-fx--w-x--b)
+      - [Why Use Linear Functions?](#why-use-linear-functions)
+      - [Workflow diagram](#workflow-diagram-2)
+      - [What’s next: cost function](#whats-next-cost-function)
+  - [Lecture 10: Linear Regression With One Variable](#lecture-10-linear-regression-with-one-variable)
+    - [Cost Function for Linear Regression (J(w,b))](#cost-function-for-linear-regression-jwb)
+      - [Quick Summary (L10)](#quick-summary-l10)
+      - [What is the Cost Function?](#what-is-the-cost-function)
+      - [Why Do We Need a Cost Function?](#why-do-we-need-a-cost-function)
+      - [Parameters w and b](#parameters-w-and-b)
+      - [What are w and b?](#what-are-w-and-b)
+      - [Errors and squared error](#errors-and-squared-error)
+      - [Cost function J(w,b)](#cost-function-jwb)
+      - [Why average and 1/(2m)?](#why-average-and-12m)
+      - [Intuition](#intuition)
+      - [Workflow diagram](#workflow-diagram-3)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -426,7 +440,8 @@ Unsupervised learning uses data with inputs **x only** (no labels **y**). The go
 
 ---
 
-### Lecture 8: Linear Regression Model (Part 1)
+### Lecture 8: Linear Regression With One Variable
+#### Linear Regression Model (Part 1)
 
 ### Quick Summary (L8)
 **Linear regression** fits a **straight line** to relate an input **x** (e.g., house size) to an output **y** (e.g., price). Using a **Portland housing dataset** (size vs price), we learn the line and then **predict** price for a new size.
@@ -507,7 +522,8 @@ Example (1250 sq ft prediction)
 
 ---
 
-### Lecture 9: Linear Regression Model (Part 2)
+### Lecture 9: Linear Regression With One Variable
+#### Linear Regression Model (Part 2)
 
 ### Quick Summary (L9)
 Supervised learning takes a **training set** with inputs **x** and targets **y**, and learns a **function f (the model)** that maps x → **ŷ** (y‑hat, the **prediction**). For linear regression, we use a **straight line**: **f(x) = w x + b**. Next, we’ll design a **cost function** to measure how good the line is.
@@ -576,3 +592,104 @@ How to regenerate the figure (Windows PowerShell)
 - `python "Module 1/script/generate_linear_regression_plot.py"`
  - `python "Module 1/script/generate_linear_regression_with_table.py"`
  - `python "Module 1/script/generate_linear_regression_pred_1250.py"`
+
+---
+
+### Lecture 10: Linear Regression With One Variable
+#### Cost Function for Linear Regression (J(w,b))
+
+### Quick Summary (L10)
+To train linear regression, we measure how good a line is with a **cost function**. For each training example, compute the **error** (prediction **ŷ** minus **target y**), **square** it, and **average** across all examples. The cost is **J(w,b)**; our goal is to find **w, b** that make **J** small.
+
+### What is the Cost Function?
+- The cost function is a mathematical tool that measures how well a linear regression model's predictions match the actual data.
+- It tells us **how good or bad** our model is at predicting the correct value for each data point.
+
+### Why Do We Need a Cost Function?
+- When training a model, we want our line (prediction function) to fit the data well.
+- But how do we measure if the line is good or bad?
+👉 That’s what the cost function does — it tells us how well (or poorly) the model is doing.
+- The cost function gives a **score** for the model:
+    - A **low score** means predictions are close to the real values (good fit).
+
+    - A **high score** means predictions are far from the real values (bad fit).
+
+### Parameters w and b
+- Model: **\(f_{w,b}(x)\) = w x + b**. The numbers **w** and **b** are the model **parameters** (also called **weights** or **coefficients**).
+- Changing **w** changes the **slope**; changing **b** moves the line up/down (**y‑intercept**).
+
+Training set snapshot (for intuition)
+
+| x (size in sq ft) | y (price in $1000s) |
+| --- | --- |
+| 2104 | 460 |
+| 1416 | 232 |
+| 1534 | 315 |
+| 852 | 178 |
+
+Model equation
+- \(f_{w,b}(x) = w\,x + b\)
+- Given **x**, the model outputs the **prediction** \(\hat{y} = f_{w,b}(x)\).
+
+w and b variations (generated)
+![Effect of w and b on f(x)](assets/linear_variations_w_b.png)
+
+
+![Effect of w and b on f(x)](assets/linear_regression_w_b.png)
+
+### Errors and squared error
+- For example \(i\): prediction is **\(\hat{y}^{(i)} = f(x^{(i)}) = w x^{(i)} + b\)**.
+- **Error** for example \(i\): **\(\hat{y}^{(i)} - y^{(i)}\)**.
+- **Squared error**: **\((\hat{y}^{(i)} - y^{(i)})^2\)**. Squaring keeps errors positive (no canceling out) and penalizes large mistakes.
+
+### Cost function J(w,b)
+- Over **m** examples, average the squared errors:
+- \( J(w,b) = \dfrac{1}{2m} \sum_{i=1}^{m} (\, f(x^{(i)}) - y^{(i)} \,)^2 \)
+- Equivalent using \(\hat{y}\): \( J(w,b) = \dfrac{1}{2m} \sum_{i=1}^{m} (\, \hat{y}^{(i)} - y^{(i)} \,)^2 \)
+
+### What are w and b?
+- **w (slope/weight)**: how fast the prediction changes when **x** increases by 1. Bigger **w** → steeper upward line; negative **w** → line slopes downward.
+- **b (y‑intercept/bias)**: the prediction when **x = 0**. It slides the whole line up or down.
+- Together: **w sets the tilt**, **b sets the height**. Changing **w** and **b** changes how well the line fits the data.
+
+![w and b explainer](assets/w_b_explainer.png)
+
+### How it works (step‑by‑step)
+- **Prediction**: for each example \(i\), compute **\(\hat{y}^{(i)} = f(x^{(i)})\)** using the current **\(w, b\)**.
+- **Error**: The error is the difference between the predicted value and the true value **(\(\hat{y}^{(i)} - y^{(i)}\))**.
+- **Squaring**: The error is squared  **\((\hat{y}^{(i)} - y^{(i)})^2\)** so that negatives/positives don’t cancel out and large mistakes count more than small ones..
+- **Averaging**: average the squared errors over **m** examples to evaluate overall fit.
+
+Cost function formula
+\[ J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( f(x^{(i)}) - y^{(i)} \big)^2 \]
+- **m**: number of training examples.
+- **\(f(x^{(i)})\)**: prediction for example **i**.
+- The **\(1/(2m)\)** factor is conventional and makes calculus cleaner later.
+
+![Cost Function](assets/cost_function.png)
+
+### Why average and 1/(2m)?
+- **Average (1/m)** makes J comparable across datasets of different sizes.
+- The extra **1/2** makes math cleaner later (derivatives drop a 2 factor).
+
+### Why Do We Use the Cost Function?
+- The goal in training is to find the values of w and b that make the cost function as small as possible.
+- A smaller cost means better predictions — so the algorithm uses the cost function to optimize the model.
+
+### Intuition
+- **If the cost function J(w, b) is large** → model predictions are far from actual values (bad fit) or the model is making big prediction errors.
+- **If J(w, b) is small** → predictions are close to targets (good fit).
+
+Our goal in linear regression is to **find values of `w` and `b` that make `J(w,b)` as small as possible.**
+
+![High vs low cost fit](assets/cost_intuition.png)
+
+
+### Workflow diagram
+```mermaid
+graph LR
+  A[Parameters w and b] --> B[Model f x = w x + b]
+  B --> C[Predictions y_hat for all examples]
+  C --> D[Compute errors y_hat - y]
+  D --> E[Square and average -> J w b]
+```
