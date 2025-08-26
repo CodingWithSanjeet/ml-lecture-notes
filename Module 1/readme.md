@@ -94,6 +94,15 @@
       - [Why average and 1/(2m)?](#why-average-and-12m)
       - [Intuition](#intuition)
       - [Workflow diagram](#workflow-diagram-3)
+  - [Lecture 11: Linear Regression With One Variable](#lecture-11-linear-regression-with-one-variable)
+    - [Cost Function Intuition (Part 4)](#cost-function-intuition-part-4)
+      - [Quick Summary (L11)](#quick-summary-l11)
+      - [Setup: simplified model f(x) = w x](#setup-simplified-model-fx--w-x)
+      - [Scenario plots: w = 1, 0.5, 0, -0.5](#scenario-plots-w--1-05-0--05)
+      - [Building J(w) point by point](#building-jw-point-by-point)
+      - [Takeaway: choose w to minimize J(w)](#takeaway-choose-w-to-minimize-jw)
+      - [Step‑by‑step example: compute J(w,b) cost tables (b = 0)](#step-by-step-example-compute-jwb-cost-tables-b--0)
+      - [Cost surface (J(w,b)) and contour](#cost-surface-jwb-and-contour)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -704,3 +713,333 @@ graph LR
   C --> D[Compute errors y_hat - y]
   D --> E[Square and average -> J w b]
 ```
+
+---
+
+### Lecture 11: Linear Regression With One Variable
+#### Cost Function Intuition
+
+### Quick Summary (L11)
+We use the **cost function J** to pick parameters that make predictions close to the truth. Using a simple model **f(x) = w x** (set **b = 0**), we vary **w**, see the fitted line, and compute **J(w)**. The best **w** is the one that makes **J(w)** the smallest.
+
+### Setup: simplified model f(x) = w x
+- Mock training set: (1,1), (2,2), (3,3)
+- Model: **f(x) = w x** (so the line goes through the origin)
+- Cost:
+```math
+J(w) = \frac{1}{2m} \sum_{i=1}^{m} \big( w\,x^{(i)} - y^{(i)} \big)^2
+```
+
+![Lecture 11 scenarios and cost](assets/cost_function_intuition.png)
+
+- Goal: **Find the value of `𝑤` that minimizes `J(w)`**.
+
+### Scenario plots: w = 1, 0.5, 0, −0.5
+left: model fits, right: **J(w)** curve
+![Lecture 11 scenarios and cost](assets/lecture11_scenarios_and_cost.png)
+
+What’s happening
+- **w = 1.0**: each point lies on the line → errors are 0 → **J(w) = 0**
+- **w = 0.5**: line is too shallow → errors positive → **J(w) ≈ 0.58**
+- **w = 0.0**: flat line → larger errors → **J(w) ≈ 2.33**
+- **w = −0.5**: wrong direction → even larger errors → **J(w) ≈ 5.25**
+
+![Lecture 11 scenarios and cost](assets/all_fits.png)
+
+### Building J(w) point by point
+- For each **w**, compute **J(w)** from squared errors on all points
+- Plot many pairs (w, J(w)) → you trace a smooth curve; the minimum is the best **w**
+
+![Residuals and cost](assets/residuals_and_cost.png)
+
+### Takeaway: choose w to minimize J(w)
+- **Linear regression** finds parameters that **minimize the cost**
+- With both **w** and **b**, we minimize **J(w,b)** (next: visualize the surface for w and b)
+
+
+
+### Step‑by‑step example: compute J(w,b) cost tables (b = 0)
+
+- **Dataset (for clarity)**: `(1, 1), (2, 2), (3, 3)`; **Model**: `f(x) = w × x` (set **b = 0**)
+
+In this walkthrough we keep **b = 0** so the line passes through the origin. We will vary the **slope w** and, for each choice:
+- State the **hypothesis**: `f(x) = w × x`
+- Compute the **prediction ŷ** for each x
+- Compute the **error** `e = ŷ − y`
+- Compute the **squared error** `e²`
+- Average over the dataset to get the **cost J(w)** using `J(w) = (1/(2m)) Σ e²`
+
+Tip: If **w** is negative, the line tilts down and predictions are below the true **y**; if **w** is too large, predictions overshoot. In both cases, the mistakes get bigger, so the **cost** goes up.
+
+#### <u>Cost for w = -0.5</u>
+🎯 w = -0.5
+
+Why this w: **downward slope**; predictions are below the data → larger **errors** → higher **J(w)**.
+
+Step 1: Set up the hypothesis f(x) = -0.5 × x
+
+Step 2: Calculate cost J(-0.5)
+
+| x | y | f(x) = -0.5×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | -0.50 | -1.50 | 2.25 |
+| 2.0 | 2.0 | -1.00 | -3.00 | 9.00 |
+| 3.0 | 3.0 | -1.50 | -4.50 | 20.25 |
+
+**J(-0.5) = (1/6) × (2.25 + 9.00 + 20.25) = 31.50/6 = 5.250**
+
+![w fits grid](assets/pair_w_-0_5.png)
+
+#### <u>Cost for w = -1.0</u>
+🎯 w = -1.0
+
+Why this w: more **negative slope**; even bigger gap to the data → **squared errors** grow.
+
+Step 1: Set up the hypothesis f(x) = -1.0 × x
+
+Step 2: Calculate cost J(-1.0)
+
+| x | y | f(x) = -1.0×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | -1.00 | -2.00 | 4.00 |
+| 2.0 | 2.0 | -2.00 | -4.00 | 16.00 |
+| 3.0 | 3.0 | -3.00 | -6.00 | 36.00 |
+
+**J(-1.0) = (1/6) × (4.00 + 16.00 + 36.00) = 56.00/6 = 9.333**
+
+![w fits grid](assets/pair_w_-1_0.png)
+
+#### <u>Cost for w = -1.5</u>
+🎯 w = -1.5
+
+Why this w: **very steep downward** line; **cost J(w)** increases further.
+
+Step 1: Set up the hypothesis f(x) = -1.5 × x
+
+Step 2: Calculate cost J(-1.5)
+
+| x | y | f(x) = -1.5×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | -1.50 | -2.50 | 6.25 |
+| 2.0 | 2.0 | -3.00 | -5.00 | 25.00 |
+| 3.0 | 3.0 | -4.50 | -7.50 | 56.25 |
+
+**J(-1.5) = (1/6) × (6.25 + 25.00 + 56.25) = 87.50/6 = 14.583**
+
+![w fits grid](assets/pair_w_-1_5.png)
+
+
+#### <u>Cost for w = 0.0</u>
+🎯 w = 0.0
+
+Why this w: **flat line** `f(x)=0`; the **error** equals `y` for each point → moderate **J(w)**.
+
+Step 1: Set up the hypothesis f(x) = 0.0 × x
+
+Step 2: Calculate cost J(0.0)
+
+| x | y | f(x) = 0×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 0.00 | −1.00 | 1.00 |
+| 2.0 | 2.0 | 0.00 | −2.00 | 4.00 |
+| 3.0 | 3.0 | 0.00 | −3.00 | 9.00 |
+
+**J(0.0) = (1/6) × (1.00 + 4.00 + 9.00) = 14/6 = 2.333**
+
+![w fits grid](assets/pair_w_0_0.png)
+
+#### <u>Cost for w = 0.5</u>
+🎯 w = 0.5
+
+Why this w: **shallow upward** line; predictions under‑estimate **y** a bit → smaller **J(w)** than w=0 but not zero.
+
+Step 1: Set up the hypothesis f(x) = 0.5 × x
+
+Step 2: Calculate cost J(0.5)
+
+| x | y | f(x) = 0.5×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 0.50 | −0.50 | 0.25 |
+| 2.0 | 2.0 | 1.00 | −1.00 | 1.00 |
+| 3.0 | 3.0 | 1.50 | −1.50 | 2.25 |
+
+**J(0.5) = (1/6) × (0.25 + 1.00 + 2.25) = 3.50/6 = 0.583**
+
+![w fits grid](assets/pair_w_0_5.png)
+![w fits grid](assets/pair_w_05.png)
+
+#### <u>Cost for w = 1.0</u>
+🎯 w = 1.0
+
+Why this w: **ideal slope** for this dataset; **prediction ŷ equals y** for all points → **J(w)=0**.
+
+Step 1: Set up the hypothesis f(x) = 1.0 × x
+
+Step 2: Calculate cost J(1.0)
+
+| x | y | f(x) = 1.0×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 1.00 | 0.00 | 0.00 |
+| 2.0 | 2.0 | 2.00 | 0.00 | 0.00 |
+| 3.0 | 3.0 | 3.00 | 0.00 | 0.00 |
+
+**J(1.0) = (1/6) × (0.00 + 0.00 + 0.00) = 0.000**
+
+![w fits grid](assets/pair_w_1_0.png)
+![w fits grid](assets/w_plot_1.png)
+
+#### <u>Cost for w = 1.5</u>
+🎯 w = 1.5
+
+Why this w: **too steep**; predictions overshoot → **errors** grow again → **J(w)** increases.
+
+Step 1: Set up the hypothesis f(x) = 1.5 × x
+
+Step 2: Calculate cost J(1.5)
+
+| x | y | f(x) = 1.5×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 1.50 | 0.50 | 0.25 |
+| 2.0 | 2.0 | 3.00 | 1.00 | 1.00 |
+| 3.0 | 3.0 | 4.50 | 1.50 | 2.25 |
+
+**J(1.5) = (1/6) × (0.25 + 1.00 + 2.25) = 3.50/6 = 0.583**
+
+![w fits grid](assets/pair_w_1_5.png)
+
+#### <u>Cost for w = 2.0</u>
+🎯 w = 2.0
+
+Why this w: much **steeper** than the data trend; **squared errors** become larger → higher **cost**.
+
+Step 1: Set up the hypothesis f(x) = 2.0 × x
+
+Step 2: Calculate cost J(2.0)
+
+| x | y | f(x) = 2.0×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 2.00 | 1.00 | 1.00 |
+| 2.0 | 2.0 | 4.00 | 2.00 | 4.00 |
+| 3.0 | 3.0 | 6.00 | 3.00 | 9.00 |
+
+**J(2.0) = (1/6) × (1.00 + 4.00 + 9.00) = 14/6 = 2.333**
+
+![w fits grid](assets/pair_w_2_0.png)
+
+#### <u>Cost for w = 2.5</u>
+🎯 w = 2.5
+
+Why this w: even **steeper**; expect noticeably larger **J(w)**.
+
+Step 1: Set up the hypothesis f(x) = 2.5 × x
+
+Step 2: Calculate cost J(2.5)
+
+| x | y | f(x) = 2.5×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 2.50 | 1.50 | 2.25 |
+| 2.0 | 2.0 | 5.00 | 3.00 | 9.00 |
+| 3.0 | 3.0 | 7.50 | 4.50 | 20.25 |
+
+**J(2.5) = (1/6) × (2.25 + 9.00 + 20.25) = 31.50/6 = 5.250**
+
+![w fits grid](assets/pair_w_2_5.png)
+
+#### <u>Cost for w = 3.0</u>
+🎯 w = 3.0
+
+Why this w: slope well above the data trend; **errors** and **J(w)** continue to grow.
+
+Step 1: Set up the hypothesis f(x) = 3.0 × x
+
+Step 2: Calculate cost J(3.0)
+
+| x | y | f(x) = 3.0×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 3.00 | 2.00 | 4.00 |
+| 2.0 | 2.0 | 6.00 | 4.00 | 16.00 |
+| 3.0 | 3.0 | 9.00 | 6.00 | 36.00 |
+
+**J(3.0) = (1/6) × (4.00 + 16.00 + 36.00) = 56.00/6 = 9.333**
+
+![w fits grid](assets/pair_w_3_0.png)
+
+#### <u>Cost for w = 3.5</u>
+🎯 w = 3.5
+
+Why this w: still steeper; the **cost** rises further.
+
+Step 1: Set up the hypothesis f(x) = 3.5 × x
+
+Step 2: Calculate cost J(3.5)
+
+| x | y | f(x) = 3.5×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 3.50 | 2.50 | 6.25 |
+| 2.0 | 2.0 | 7.00 | 5.00 | 25.00 |
+| 3.0 | 3.0 | 10.50 | 7.50 | 56.25 |
+
+**J(3.5) = (1/6) × (6.25 + 25.00 + 56.25) = 87.50/6 = 14.583**
+
+![w fits grid](assets/pair_w_3_5.png)
+
+#### <u>Cost for w = 4.0</u>
+🎯 w = 4.0
+
+Why this w: much steeper; very large **squared errors** → high **J(w)**.
+
+Step 1: Set up the hypothesis f(x) = 4.0 × x
+
+Step 2: Calculate cost J(4.0)
+
+| x | y | f(x) = 4.0×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 4.00 | 3.00 | 9.00 |
+| 2.0 | 2.0 | 8.00 | 6.00 | 36.00 |
+| 3.0 | 3.0 | 12.00 | 9.00 | 81.00 |
+
+**J(4.0) = (1/6) × (9.00 + 36.00 + 81.00) = 126.00/6 = 21.000**
+
+![w fits grid](assets/pair_w_4_0.png)
+
+#### <u>Cost for w = 4.5</u>
+🎯 w = 4.5
+
+Why this w: extremely steep; **cost J(w)** becomes quite large.
+
+Step 1: Set up the hypothesis f(x) = 4.5 × x
+
+Step 2: Calculate cost J(4.5)
+
+| x | y | f(x) = 4.5×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 4.50 | 3.50 | 12.25 |
+| 2.0 | 2.0 | 9.00 | 7.00 | 49.00 |
+| 3.0 | 3.0 | 13.50 | 10.50 | 110.25 |
+
+**J(4.5) = (1/6) × (12.25 + 49.00 + 110.25) = 171.50/6 = 28.583**
+
+![w fits grid](assets/pair_w_4_5.png)
+
+#### <u>Cost for w = 5.0</u>
+🎯 w = 5.0
+
+Why this w: extremely steep; **errors** are largest among shown values → maximum **J(w)** here.
+
+Step 1: Set up the hypothesis f(x) = 5.0 × x
+
+Step 2: Calculate cost J(5.0)
+
+| x | y | f(x) = 5.0×x | Error | Error² |
+| --- | --- | --- | --- | --- |
+| 1.0 | 1.0 | 5.00 | 4.00 | 16.00 |
+| 2.0 | 2.0 | 10.00 | 8.00 | 64.00 |
+| 3.0 | 3.0 | 15.00 | 12.00 | 144.00 |
+
+**J(5.0) = (1/6) × (16.00 + 64.00 + 144.00) = 224.00/6 = 37.333**
+
+![w fits grid](assets/pair_w_5_0.png)
+
+![all fits and cost points](assets/common_w_fits_and_cost.png)
+![all fits and cost points](assets/all_fits.png)
+
