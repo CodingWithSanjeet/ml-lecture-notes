@@ -116,6 +116,13 @@
       - [Regenerate the figures (L12)](#regenerate-the-figures-l12)
       - [Beginner tips (L12)](#beginner-tips-l12)
       - [Key takeaways (L12)](#key-takeaways-l12)
+  - [Lecture 13: Linear Regression With One Variable](#lecture-13-linear-regression-with-one-variable)
+    - [Visualization Examples](#visualization-examples)
+      - [Quick Summary (L13)](#quick-summary-l13)
+      - [Examples: different (w,b) and their costs](#examples-different-wb-and-their-costs)
+      - [What to look for on the plots](#what-to-look-for-on-the-plots)
+      - [Try it yourself (L13 figures)](#try-it-yourself-l13-figures)
+      - [What’s next: Gradient Descent](#whats-next-gradient-descent)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -1241,3 +1248,52 @@ Step 2: Calculate cost J(5.0)
 
 - The cost surface **J(w,b)** is typically smooth and bowl‑shaped; optimization finds the **bottom**.
 - Visualizing both the **line fits** and the **cost surface/contours** builds intuition for why a parameter choice is good or bad.
+
+---
+
+### Lecture 13: Linear Regression With One Variable
+
+#### Visualization Examples
+
+### Quick Summary (L13)
+
+- See how different choices of **(w,b)** produce different **lines f<sub>w,b</sub>(x)** and different **costs J(w,b)**.
+- Bad fits appear as points **far from the minimum** on the **contour** and **surface** plots; better fits lie **closer to the minimum**.
+
+### Examples: different (w,b) and their costs
+
+- Example 1: **w ≈ −0.15**, **b ≈ 800**
+  - Line tilts downward and intersects y‑axis at 800 → clearly **under/overestimates** many points.
+  - Corresponding point on **J(w,b)** is **far from the minimum** → **high cost**.
+    ![Contour view variant: J(w,b) with labelled points](assets/lec13_example1.png)
+    ![Contour view variant: J(w,b) with labelled points](assets/lec13_example_1_w_-0.15_b_+800.png)
+- Example 2: **w = 0**, **b ≈ 360**
+
+  - **Flat line** `f(x)=360` → not great, but slightly **less bad** than the previous one.
+  - The cost point moves **closer** to the minimum, but still **not close**.
+
+  ![Contour view variant: J(w,b) with labelled points](assets/lec13_example2.png)
+
+  ![Contour view variant: J(w,b) with labelled points](assets/lec13_example_2_w_+0.00_b_+360.png)
+
+- Example 3: another **(w,b)** pair
+
+  - Produces a line that is **worse** again; its J point moves **farther** from the minimum.
+
+  ![Contour view variant: J(w,b) with labelled points](assets/lec13_example3.png)
+  ![Contour view variant: J(w,b) with labelled points](assets/lec13_example_3_w_+0.14_b_+15.png)
+
+- Example 4: a **good fit**
+
+  - The line tracks the data cloud well → point on the J plot is **near the minimum** (small cost), though not necessarily exactly at it.
+
+  ![Contour view variant: J(w,b) with labelled points](assets/lec13_example4.png)
+  ![Contour view variant: J(w,b) with labelled points](assets/lec13_example_4_w_+0.12_b_+20.png)
+
+### What to look for on the plots
+
+- Left: lines `f(x)=w x + b` over the **training set**; check **vertical distances** (errors) from points to the line.
+- Right/top: **contour plot** of **J(w,b)**; centers of **smallest ellipses** mark the **minimum**.
+- Bottom: **3D surface** of **J(w,b)**; the **lowest spot** is the minimum. Selected **(w,b)** appear as dots at height **J(w,b)**.
+
+---
