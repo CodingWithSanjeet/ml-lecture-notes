@@ -161,6 +161,14 @@
       - [At a minimum: gradient is zero](#at-a-minimum-gradient-is-zero)
       - [Why fixed α can still reach a minimum](#why-fixed--can-still-reach-a-minimum)
       - [Generated figures (L17)](#generated-figures-l17)
+  - [Lecture 18: Training Linear Regression](#lecture-18-training-linear-regression)
+    - [Gradient Descent for Linear Regression](#gradient-descent-for-linear-regression)
+      - [Quick Summary (L18)](#quick-summary-l18)
+      - [Model, cost, and update rule](#model-cost-and-update-rule)
+      - [Gradients (no calculus required)](#gradients-no-calculus-required)
+      - [Derivatives (optional)](#derivatives-optional)
+      - [Convex cost: one global minimum](#convex-cost-one-global-minimum)
+      - [Generated figure (L18)](#generated-figure-l18)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -1625,3 +1633,90 @@ This allows the algorithm to naturally **converge** to a **local minimum** witho
 ![Lecture 17: fixed α — shrinking steps near minimum](assets/lec17_fixed_lr.png)
 
 ![Lecture 17: fixed α — shrinking steps near minimum](assets/lec17_fixed_alpha_converge.png)
+
+---
+
+### Lecture 18: Training Linear Regression
+
+#### Gradient Descent for Linear Regression
+
+### Quick Summary (L18)
+
+- Combine the **linear model**, the **squared error cost**, and **gradient descent** to learn **w, b** that best fit a straight line to the training data.
+- The squared error cost for linear regression is **convex (bowl‑shaped)** → there is a **single global minimum**; gradient descent will reach it with a reasonable **α**.
+
+### Model, cost, and update rule
+
+- Model: **f<sub>w,b</sub>(x) = w x + b**
+- Cost:
+
+```math
+J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( f_{w,b}(x^{(i)}) - y^{(i)} \big)^2
+```
+
+- Gradient descent updates (simultaneous):
+
+```math
+\begin{aligned}
+w &\leftarrow w - \alpha\, \frac{\partial J}{\partial w} = w - \alpha\,\frac{1}{m} \sum_{i=1}^{m} \big( (w x^{(i)} + b) - y^{(i)} \big) x^{(i)} \\
+b &\leftarrow b - \alpha\, \frac{\partial J}{\partial b} = b - \alpha\,\frac{1}{m} \sum_{i=1}^{m} \big( (w x^{(i)} + b) - y^{(i)} \big)
+\end{aligned}
+```
+
+### Gradients (no calculus required)
+
+- The **derivative** tells you: if you change **w** or **b** a tiny bit, how much does **J** go **up** or **down**?
+- The formulas above are what you implement; you don’t need the full derivation to use them.
+
+### Derivatives (optional)
+
+If you want to see how the update formulas come from calculus, here’s the short version using the squared‑error cost:
+
+We will use:
+
+- Linearity: \(\tfrac{d}{dw}\sum f_i = \sum \tfrac{d}{dw} f_i\) and constants pull out
+- Chain rule: \(\tfrac{d}{dw}\,g(h(w)) = g'(h(w))\,h'(w)\)
+- Power rule: \(\tfrac{d}{dw}\,(u^2) = 2u\,\tfrac{du}{dw}\)
+
+Let \(e^{(i)} = w x^{(i)} + b - y^{(i)}\). Then
+
+```math
+J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( e^{(i)} \big)^2
+```
+
+Step‑by‑step for \(\partial J/\partial w\):
+
+```math
+\begin{aligned}
+\frac{\partial J}{\partial w}
+&= \frac{\partial}{\partial w} \Bigg[ \frac{1}{2m} \sum_{i=1}^{m} \big( e^{(i)} \big)^2 \Bigg] && \text{linearity} \\
+&= \frac{1}{2m} \sum_{i=1}^{m} \frac{\partial}{\partial w} \big( e^{(i)} \big)^2 && \text{pull out constant} \\
+&= \frac{1}{2m} \sum_{i=1}^{m} 2\, e^{(i)} \cdot \frac{\partial e^{(i)}}{\partial w} && \text{power + chain rule} \\
+&= \frac{1}{2m} \sum_{i=1}^{m} 2\, e^{(i)} \cdot x^{(i)} && \text{since } \tfrac{\partial}{\partial w}(w x^{(i)} + b - y^{(i)}) = x^{(i)} \\
+&= \frac{1}{m} \sum_{i=1}^{m} \big( w x^{(i)} + b - y^{(i)} \big) x^{(i)}
+\end{aligned}
+```
+
+Step‑by‑step for \(\partial J/\partial b\):
+
+```math
+\begin{aligned}
+\frac{\partial J}{\partial b}
+&= \frac{\partial}{\partial b} \Bigg[ \frac{1}{2m} \sum_{i=1}^{m} \big( e^{(i)} \big)^2 \Bigg] \\
+&= \frac{1}{2m} \sum_{i=1}^{m} 2\, e^{(i)} \cdot \frac{\partial e^{(i)}}{\partial b} && \text{power + chain rule} \\
+&= \frac{1}{2m} \sum_{i=1}^{m} 2\, e^{(i)} \cdot 1 && \text{since } \tfrac{\partial}{\partial b}(w x^{(i)} + b - y^{(i)}) = 1 \\
+&= \frac{1}{m} \sum_{i=1}^{m} \big( w x^{(i)} + b - y^{(i)} \big)
+\end{aligned}
+```
+
+These match the gradient descent pieces used above for the **w** and **b** updates.
+
+![Lecture 18: derivative steps for dJ/dw and dJ/db (optional)](assets/lec18_derivation.png)
+
+### Convex cost: one global minimum
+
+- With squared error, **J(w,b)** is a **bowl** → no bad local minima. Gradient descent will head to the **bottom** (global minimum) if **α** is sensible.
+
+![Lecture 18: J(w,b) surface and contour with GD path](assets/lec_18_global_min.png)
+
+![Lecture 18: J(w,b) surface and contour with GD path](assets/lec18_local_min.png)
