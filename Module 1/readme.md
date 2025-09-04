@@ -1674,11 +1674,19 @@ If you want to see how the update formulas come from calculus, here’s the shor
 
 We will use:
 
-- Linearity: \(\tfrac{d}{dw}\sum f_i = \sum \tfrac{d}{dw} f_i\) and constants pull out
-- Chain rule: \(\tfrac{d}{dw}\,g(h(w)) = g'(h(w))\,h'(w)\)
-- Power rule: \(\tfrac{d}{dw}\,(u^2) = 2u\,\tfrac{du}{dw}\)
+```math
+\begin{aligned}
+\text{Linearity: } &\ \frac{d}{dw}\sum_i f_i = \sum_i \frac{d}{dw} f_i \\
+\text{Chain rule: } &\ \frac{d}{dw}\,g(h(w)) = g'(h(w))\,h'(w) \\
+\text{Power rule: } &\ \frac{d}{dw}(u^2) = 2u\,\frac{du}{dw}
+\end{aligned}
+```
 
-Let \(e^{(i)} = w x^{(i)} + b - y^{(i)}\). Then
+```math
+e^{(i)} = w\,x^{(i)} + b - y^{(i)}
+```
+
+Then
 
 ```math
 J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( e^{(i)} \big)^2
