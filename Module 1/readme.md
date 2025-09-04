@@ -143,6 +143,16 @@
       - [Pseudocode](#pseudocode)
       - [Beginner tips (L15)](#beginner-tips-l15)
       - [What’s next: derivatives intuition](#whats-next-derivatives-intuition)
+  - [Lecture 16: Training Linear Regression](#lecture-16-training-linear-regression)
+    - [Gradient Descent Intuition](#gradient-descent-intuition)
+      - [Quick Summary (L16)](#quick-summary-l16)
+      - [1-parameter view: J(w)](#1-parameter-view-jw)
+      - [Positive vs negative slope](#positive-vs-negative-slope)
+      - [What Does the Derivative Tell Us?](#what-does-the-derivative-tell-us)
+      - [Derivative is Positive (Slope going UP)](#derivative-is-positive-slope-going-up)
+      - [Case 2: Derivative is Negative (Slope going DOWN)](#case-2-derivative-is-negative-slope-going-down)
+      - [Generated figure (L16)](#generated-figure-l16)
+      - [Why Gradient Descent Makes Sense](#why-gradient-descent-makes-sense)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -1479,3 +1489,70 @@ repeat until convergence:
 - Keep updates **simultaneous**; it’s both correct and easier to reason about.
 
 ---
+
+### Lecture 16: Training Linear Regression
+
+#### Gradient Descent Intuition
+
+### Quick Summary (L16)
+
+- Understand why the **derivative sign** (positive vs negative) tells gradient descent to step **left** or **right** on **J(w)**.
+- See how the **learning rate α** scales the step size.
+
+### 1-parameter view: **J(w)**
+
+- To build intuition, fix **b = 0** and study cost **J(w)** in 2D.
+- At a point **w₀**, the **tangent line’s slope** equals **dJ/dw|₍w₀₎**.
+- Update rule: **w := w − α · dJ/dw**.
+
+![Lecture 16: cost curve J(w) (1-parameter view)](assets/lec16_jw_curve.png)
+
+### Positive vs negative slope
+
+- If **dJ/dw > 0** (slope up-right), step is `w := w - α·(positive)` → move **left** → J decreases.
+- If **dJ/dw < 0** (slope down-right), step is `w := w - α·(negative)` → move **right** → J decreases.
+
+![Lecture 16: GD intuition on J(w) with tangent and step direction](assets/lec16_gradient_des_intuition.png)
+
+![Lecture 16: GD intuition on J(w) with tangent and step direction](assets/lec16_gd_intuition.png)
+
+### What Does the **Derivative** Tell Us?
+
+- The **derivative (dJ/dw)** is the **slope** of the cost curve **J(w)** at a point. The sign of the slope tells us which way to move **w** to reduce the **cost**.
+
+### Derivative is **Positive** (Slope going UP)
+
+Suppose you're on the right side of the minimum.
+
+- The slope is **positive** (e.g., **+2**)
+- That means:
+  ```
+    w = w - α·(positive)
+  ```
+- Result: **w becomes smaller**.
+- This moves **w to the left**, closer to the **minimum**.
+
+![Lecture 16: positive slope case — step left](assets/lec16_gd_positive.png)
+
+### Case 2: Derivative is **Negative** (Slope going DOWN)
+
+Suppose you're on the left side of the minimum.
+
+- The slope is **negative** (e.g., **−2**)
+- That means:
+  ```
+    w = w - α·(negative)
+  ```
+- Subtracting a **negative** = **Adding a positive**
+- Result: **w becomes larger**.
+- This moves **w to the right**, again closer to the **minimum**.
+
+![Lecture 16: negative slope case — step right](assets/lec16_gd_negative.png)
+
+### Why **Gradient Descent** Makes Sense
+
+No matter which side of the curve you're on:
+
+- **Gradient Descent** uses the **slope (derivative)** to decide the direction.
+- Then it adjusts the parameter **w** using the **learning rate α**.
+- It always moves toward the **lowest point (minimum)** of the cost function **J(w)**.
