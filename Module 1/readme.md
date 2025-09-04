@@ -126,12 +126,23 @@
   - [Lecture 14: Training Linear Regression — Gradient Descent](#lecture-14-training-linear-regression--gradient-descent)
     - [Quick Summary (L14)](#quick-summary-l14)
     - [What is gradient descent?](#what-is-gradient-descent)
+    - [Goal of Gradient Descent](#goal-of-gradient-descent)
     - [Start with an initial guess](#start-with-an-initial-guess)
     - [How it moves: steepest descent](#how-it-moves-steepest-descent)
     - [Local vs global minimum](#local-vs-global-minimum)
     - [Works beyond linear regression](#works-beyond-linear-regression)
     - [Beginner tips (L14)](#beginner-tips-l14)
-    - [What’s next (math update rules)](#whats-next-math-update-rules)
+  - [Lecture 15: Training Linear Regression](#lecture-15-training-linear-regression)
+    - [Implementing Gradient Descent](#implementing-gradient-descent)
+      - [Quick Summary (L15)](#quick-summary-l15)
+      - [Update rules (w and b)](#update-rules-w-and-b)
+      - [Learning rate α (alpha)](#learning-rate--alpha)
+      - [Assignment vs equality (coding vs math)](#assignment-vs-equality-coding-vs-math)
+      - [Simultaneous update: correct](#simultaneous-update-correct)
+      - [Non‑simultaneous update: incorrect](#non-simultaneous-update-incorrect)
+      - [Pseudocode](#pseudocode)
+      - [Beginner tips (L15)](#beginner-tips-l15)
+      - [What’s next: derivatives intuition](#whats-next-derivatives-intuition)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -1370,9 +1381,9 @@ The goal of gradient descent is to **minimize the cost function** — that is, t
 - Move a tiny bit in that direction. This is the idea of **steepest descent**.
 - Do this **again and again**: step, re‑evaluate, step… until you reach the **bottom (minimum)**.
 
-  ![Contour view variant: J(w,b) with labelled points](assets/lec14_gradient_descent.png)
+  ![Lecture 14: gradient descent path on J(w,b) contour plot](assets/lec14_gradient_descent.png)
 
-  ![Contour view variant: J(w,b) with labelled points](assets/lec14_gradient_descent_lm.png)
+  ![Lecture 14: local minima vs paths on J(w,b) contour](assets/lec14_gradient_descent_lm.png)
 
 ### Local vs global minimum
 
@@ -1390,5 +1401,81 @@ The goal of gradient descent is to **minimize the cost function** — that is, t
 - Picture the **hill‑to‑valley** journey: step downhill, check if you are still going down, repeat.
 - If you do not see progress, try **smaller steps** (you’ll see how to set **step size / learning rate** in the next lecture).
 - Don’t worry about calculus yet—the **intuition** is enough for now. The math for the exact step direction comes next.
+
+---
+
+### Lecture 15: Training Linear Regression
+
+#### Implementing Gradient Descent
+
+### Quick Summary (L15)
+
+- We actually implement gradient descent by repeatedly updating the parameters **w** and **b** using a small step size **α (alpha)**.
+- Always perform a **simultaneous update** of both parameters.
+
+### Update rules (w and b)
+
+Plain‑text update equations you’ll code:
+
+```
+w := w - α * (dJ/dw)
+b := b - α * (dJ/db)
+```
+
+- **dJ/dw** and **dJ/db** are the derivatives (they tell the direction to step).
+- **α** controls how big a step you take each time.
+
+### Learning rate α (alpha)
+
+- **Small α** → tiny, safe steps (slow but stable).
+- **Large α** → big, aggressive steps (can be fast, can also overshoot and fail).
+- We’ll tune **α** shortly; start small if unsure (e.g., 0.01).
+
+### Assignment vs equality (coding vs math)
+
+- In code, `=` means **assignment** (store a new value): `a = a + 1` increments `a`.
+- In math, `=` is a **truth statement** (both sides equal). Don’t read code `=` as a math proof.
+
+### Simultaneous update: correct
+
+Compute both new values using the old parameters, then assign both:
+
+```
+tmp_w = w - α * (dJ/dw using old w,b)
+tmp_b = b - α * (dJ/db using old w,b)
+w = tmp_w
+b = tmp_b
+```
+
+### Non‑simultaneous update: incorrect
+
+Updating `w` first and then using that updated `w` to compute the new `b` mixes old/new values and changes the algorithm. Avoid:
+
+```
+tmp_w = w - α * (dJ/dw)
+w = tmp_w       # updated early (problem)
+tmp_b = b - α * (dJ/db using updated w)
+b = tmp_b
+```
+
+### Pseudocode
+
+```
+initialize w, b
+repeat until convergence:
+    compute dJ/dw, dJ/db    # from current w, b
+    tmp_w = w - α * (dJ/dw)
+    tmp_b = b - α * (dJ/db)
+    w = tmp_w
+    b = tmp_b
+```
+
+![Lecture 15: correct vs incorrect gradient descent update (simultaneous)](assets/lec15_gradient_descent_imp.png)
+
+### Beginner tips (L15)
+
+- If the cost **J** increases or jumps around, try a **smaller α**.
+- Plot **J** per iteration; it should trend down and then flatten.
+- Keep updates **simultaneous**; it’s both correct and easier to reason about.
 
 ---
