@@ -123,6 +123,15 @@
       - [What to look for on the plots](#what-to-look-for-on-the-plots)
       - [Try it yourself (L13 figures)](#try-it-yourself-l13-figures)
       - [What’s next: Gradient Descent](#whats-next-gradient-descent)
+  - [Lecture 14: Training Linear Regression — Gradient Descent](#lecture-14-training-linear-regression--gradient-descent)
+    - [Quick Summary (L14)](#quick-summary-l14)
+    - [What is gradient descent?](#what-is-gradient-descent)
+    - [Start with an initial guess](#start-with-an-initial-guess)
+    - [How it moves: steepest descent](#how-it-moves-steepest-descent)
+    - [Local vs global minimum](#local-vs-global-minimum)
+    - [Works beyond linear regression](#works-beyond-linear-regression)
+    - [Beginner tips (L14)](#beginner-tips-l14)
+    - [What’s next (math update rules)](#whats-next-math-update-rules)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -1295,5 +1304,91 @@ Step 2: Calculate cost J(5.0)
 - Left: lines `f(x)=w x + b` over the **training set**; check **vertical distances** (errors) from points to the line.
 - Right/top: **contour plot** of **J(w,b)**; centers of **smallest ellipses** mark the **minimum**.
 - Bottom: **3D surface** of **J(w,b)**; the **lowest spot** is the minimum. Selected **(w,b)** appear as dots at height **J(w,b)**.
+
+---
+
+### Lecture 14: Training Linear Regression — Gradient Descent
+
+#### Gradient Descent
+
+### Quick Summary (L14)
+
+- In the last lesson, we saw that when
+  training a model (like linear regression),
+  we try to find the best values of
+  parameters **w (weight)** and **b (bias)**
+  that give us the lowest **cost** — this
+  cost tells us how far off our predictions
+  are from the real answers.
+
+- To find the best values of **w** and **b**,
+  instead of guessing randomly, we use a
+  method called **Gradient Descent**.
+  This is one of the most important
+  algorithms in machine learning. It's used
+  not just in simple models like linear
+  regression, but also in **deep learning**
+  (which powers things like ChatGPT, image
+  recognition, etc.).
+
+- **Goal**: find **w** and **b** that make the **cost J(w,b)** as small as possible.
+- **Gradient descent** is a general‑purpose algorithm that repeatedly takes **small steps downhill** on the cost surface until it reaches a **minimum**.
+- Works not only for linear regression, but also for **deep learning** and many other ML models.
+
+### What is gradient descent?
+
+**Gradient descent** is a simple method to make the **cost J(w,b)** as small as possible.
+
+- Start from any **(w,b)**.
+- Repeatedly take a small step in the direction that most quickly reduces **J** (move “downhill”).
+- Stop when **J** no longer decreases. Works for linear regression and also in **deep learning**.
+
+```mermaid
+flowchart LR
+  A[Start with w and b] --> B[Compute cost J]
+  B --> C[Take small step downhill]
+  C --> D[Update w and b]
+  D --> E[Is J still decreasing?]
+  E -- yes --> B
+  E -- no --> F[Stop at a minimum]
+```
+
+### Goal of Gradient Descent
+
+The goal of gradient descent is to **minimize the cost function** — that is, to find the **smallest possible value of J(w,b)** by changing the values of **w** and **b** little by little.
+
+> 💡 Think of the cost function like a 3D surface (like hills and valleys), where the **height shows how "bad" the model is**. The lower the height, the better your model.
+
+### Start with an initial guess
+
+- You can start with **w = 0** and **b = 0** (or any values). For linear regression, the **start** usually does not matter much.
+- After each **small step**, you get a new pair **(w,b)** and a new **cost** value.
+
+### How it moves: steepest descent
+
+- At the current point, imagine turning around **360°** and asking: which direction goes **down fastest**?
+- Move a tiny bit in that direction. This is the idea of **steepest descent**.
+- Do this **again and again**: step, re‑evaluate, step… until you reach the **bottom (minimum)**.
+
+  ![Contour view variant: J(w,b) with labelled points](assets/lec14_gradient_descent.png)
+
+  ![Contour view variant: J(w,b) with labelled points](assets/lec14_gradient_descent_lm.png)
+
+### Local vs global minimum
+
+- If the cost surface is a smooth bowl (like in linear regression with squared error), gradient descent reaches the **single (global) minimum**.
+- For more complex surfaces (e.g., some **neural networks**), there may be **many valleys** (many **local minima**). Where you **start** can influence which valley you end up in.
+- Starting from different points can lead to **different local minima**. That’s expected and often fine in practice.
+
+### Works beyond linear regression
+
+- Gradient descent can minimize almost **any differentiable function**: not just **J(w,b)** for linear regression.
+- It scales to many parameters: **w₁, w₂, …, wₙ, b**. The idea is the same: step downhill on **J(w₁,…,wₙ,b)**.
+
+### Beginner tips (L14)
+
+- Picture the **hill‑to‑valley** journey: step downhill, check if you are still going down, repeat.
+- If you do not see progress, try **smaller steps** (you’ll see how to set **step size / learning rate** in the next lecture).
+- Don’t worry about calculus yet—the **intuition** is enough for now. The math for the exact step direction comes next.
 
 ---
