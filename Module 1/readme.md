@@ -1692,7 +1692,7 @@ Then
 J(w,b) = \frac{1}{2m} \sum_{i=1}^{m} \big( e^{(i)} \big)^2
 ```
 
-Step‑by‑step for \(\partial J/\partial w\):
+Step‑by‑step for ∂J/∂w:
 
 ```math
 \begin{aligned}
@@ -1705,7 +1705,7 @@ Step‑by‑step for \(\partial J/\partial w\):
 \end{aligned}
 ```
 
-Step‑by‑step for \(\partial J/\partial b\):
+Step‑by‑step for ∂J/∂b:
 
 ```math
 \begin{aligned}
