@@ -153,6 +153,14 @@
       - [Case 2: Derivative is Negative (Slope going DOWN)](#case-2-derivative-is-negative-slope-going-down)
       - [Generated figure (L16)](#generated-figure-l16)
       - [Why Gradient Descent Makes Sense](#why-gradient-descent-makes-sense)
+  - [Lecture 17: Training Linear Regression](#lecture-17-training-linear-regression)
+    - [Learning Rate](#learning-rate)
+      - [Quick Summary (L17)](#quick-summary-l17)
+      - [If α is too small](#if--is-too-small)
+      - [If α is too large](#if--is-too-large)
+      - [At a minimum: gradient is zero](#at-a-minimum-gradient-is-zero)
+      - [Why fixed α can still reach a minimum](#why-fixed--can-still-reach-a-minimum)
+      - [Generated figures (L17)](#generated-figures-l17)
 
 ## Module 1 — Introduction to Machine Learning
 
@@ -1556,3 +1564,64 @@ No matter which side of the curve you're on:
 - **Gradient Descent** uses the **slope (derivative)** to decide the direction.
 - Then it adjusts the parameter **w** using the **learning rate α**.
 - It always moves toward the **lowest point (minimum)** of the cost function **J(w)**.
+
+---
+
+### Lecture 17: Training Linear Regression
+
+#### Learning Rate
+
+### Quick Summary (L17)
+
+- The gradient descent update for one parameter **w** is:
+
+```math
+w = w - \alpha \, \frac{∂}{∂w} J(w)
+```
+
+- **∂𝐽(𝑤)/∂w:** The gradient (slope) of the cost function at weight `𝑤`.
+- The **learning rate α** controls the **step size** of gradient descent.
+- **Too small** → works but **very slow**. **Too large** → can **overshoot** and **fail to converge**.
+- At a **minimum**, the **gradient (dJ/dw) = 0**, so the update leaves **w unchanged**.
+
+![Lecture 17: small learning rate — slow descent](assets/lec17_learning_rate.png)
+
+### If **α is too small**
+
+- Steps are **tiny** → **slow** progress towards the **minimum**.
+
+![Lecture 17: small learning rate — slow descent](assets/lec17_lr_small.png)
+
+### If **α is too large**
+
+- Steps are **huge** → **overshoot** the **minimum** and may **diverge**.
+
+![Lecture 17: large learning rate — overshoot/diverge](assets/lec17_lr_large.png)
+
+### At a **minimum**: gradient is **zero**
+
+- When **dJ/dw = 0**, the update `w := w − α·0` keeps **w the same** → stays at the **minimum**.
+
+![Lecture 17: fixed α — shrinking steps near minimum](assets/lec17_local_minima.png)
+
+![Lecture 17: at local minimum — gradient zero, w unchanged](assets/lec17_zero_grad.png)
+
+### Reaching the Local Minimum with Fixed Learning Rate
+
+As we get closer to a **local minimum**, two things happen:
+
+- The **slope** of **J(w)** gets **flatter** (the **derivative dJ/dw** becomes **smaller**).
+
+- The **update steps** become **smaller**, even if **α** is **fixed**.
+
+This allows the algorithm to naturally **converge** to a **local minimum** without decreasing **α**.
+
+![Lecture 17: fixed α — shrinking slopes and steps (annotated)](assets/lec17_fixed_alpha_annotated.png)
+
+### Why **fixed α** can still reach a **minimum**
+
+- As you get closer to a **local minimum**, the **derivative shrinks**, so steps **automatically get smaller** even if **α** is **fixed**.
+
+![Lecture 17: fixed α — shrinking steps near minimum](assets/lec17_fixed_lr.png)
+
+![Lecture 17: fixed α — shrinking steps near minimum](assets/lec17_fixed_alpha_converge.png)
