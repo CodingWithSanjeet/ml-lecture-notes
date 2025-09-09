@@ -22,12 +22,24 @@
   - [Terminology](#terminology)
 
 - [Lecture 2: Vectorization Part 1](#lecture-2-vectorization-part-1)
+
   - [Overview](#overview)
   - [Example setup](#example-setup)
   - [Without vectorization](#without-vectorization)
   - [With vectorization](#with-vectorization)
   - [Why vectorization is faster](#why-vectorization-is-faster)
   - [Key takeaways](#key-takeaways)
+
+- [Lecture 3: Vectorization — Part 2](#lecture-3-vectorization--part-2)
+  - [Introduction](#introduction-1)
+  - [Without vectorization (sequential)](#without-vectorization-sequential)
+  - [Vectorized execution (parallel)](#vectorized-execution-parallel)
+  - [Visual Explanation](#visual-explanation)
+  - [Vectorization in multiple linear regression](#vectorization-in-multiple-linear-regression)
+  - [Why Vectorization Matters](#why-vectorization-matters)
+  - [Practice with NumPy](#practice-with-numpy)
+  - [Key takeaways — L3](#key-takeaways--l3)
+  - [Visualization: timeline](#visualization-timeline)
 
 <!-- When you add Lecture 2, Lecture 3, ... follow the same pattern:
 
@@ -273,6 +285,8 @@ f_{\vec{w},b}(\vec{x}) = \vec{w} \cdot \vec{x} + b
 f = np.dot(w, x) + b
 ```
 
+![Vectorization overview](./assets/lecture2-vectorization-overview.png)
+
 ### Why vectorization is faster
 
 NumPy’s dot function is implemented in optimized linear algebra libraries.
@@ -289,3 +303,133 @@ This becomes especially important when working with large datasets and high-dime
 - Avoid writing manual loops for mathematical operations when possible.
 - Use libraries like NumPy to take advantage of optimized, parallelized operations.
 - Practice writing `np.dot(w, x) + b` instead of manual summations.
+
+---
+
+## Lecture 3: Vectorization — Part 2
+
+### Introduction
+
+When I first learned about **vectorization**, it felt like a magic trick. The same algorithm, when vectorized, ran **much faster** than the unvectorized version.
+
+- Without vectorization → operations happen **step by step (sequential)**.
+- With vectorization → operations happen **in parallel**, using **optimized hardware**.
+
+This difference is a **game‑changer** in machine learning, especially for **large datasets** and **complex models**.
+
+### Without vectorization (sequential)
+
+A simple **for loop** runs each calculation **one at a time**.
+
+- A for-loop like
+
+```python
+f = 0
+for j in range(0, 16):
+    f += w[j] * x[j]
+```
+
+- At t<sub>0</sub>, compute f + w[0] × x[0].
+- At t<sub>1</sub>, compute f + w[1] × x[1].
+- ...
+- At t<sub>15</sub>, compute f + w[15] × x[15]. Performs one multiply‑add per step at times (t<sub>0</sub>, t<sub>1</sub>, ... , t<sub>15</sub>). This is sequential: one after another.
+
+This means 16 separate steps are needed.
+Inefficient for large 𝑛 (e.g., thousands of features).
+
+![Without vectorization](./assets/lecture3-without-vectorization-timeline.png)
+
+### Vectorized execution (parallel)
+
+Vectorization uses **specialized hardware** to perform many operations **simultaneously**.
+
+```python
+import numpy as np
+f = np.dot(w, x)  # vectorized dot product
+```
+
+- Multiplications w[j]×x[j] for all 𝑗 happen in **parallel**.
+- Then, hardware efficiently **sums them up in one step**.
+
+- Using **np.dot(·,·)**, hardware multiplies all pairs (w<sub>j</sub>, x<sub>j</sub>) at once, then **reduces** (adds) them efficiently.
+
+```math
+f_{\vec{w},b}(\vec{x}) = \vec{w} \cdot \vec{x} + b
+```
+
+![Vectorization](./assets/lecture3-vectorization.png)
+
+### Visual Explanation
+
+#### Without Vectorization
+
+- Computations happen **one after another**.
+- Each loop step **updates the result**.
+
+#### With Vectorization
+
+- All multiplications are done **in parallel**.
+- Results are added together **efficiently**.
+
+### Vectorization in multiple linear regression
+
+Suppose we are updating 16 parameters
+
+```math
+\vec{w}  = (w_1, w_2, \dots, w_{16})
+```
+
+with derivative vector
+
+```math
+\vec{d}  = (d_1, d_2, \dots, d_{16})
+```
+
+,
+and learning rate **α = 0.1**.
+
+#### Without vectorization (loop)
+
+```python
+for j in range(0, 16):
+    w[j] = w[j] - 0.1 * d[j]
+```
+
+- Updates each parameter **one at a time**.
+
+#### With vectorization (all at once)
+
+```python
+w = w - 0.1 * d
+```
+
+- Updates **all parameters in parallel**.
+- Behind the scenes, **NumPy** uses optimized hardware to do this **in one step**.
+
+This speed‑up becomes crucial with **thousands of features** and **large datasets**.
+It can mean the difference between:
+
+- Training in **minutes** vs training in **hours**
+
+![Gradient descent vectorized](./assets/lecture3-gradient-descent.png)
+
+### Why Vectorization Matters
+
+- **Efficiency** → Vectorized code allows computations to **scale seamlessly** to very large datasets.
+- **Parallelism** → Leverages the power of **multi-core CPUs** and **GPUs** for simultaneous operations.
+- **Cleaner Code** → Eliminates unnecessary loops, making code **shorter, simpler, and easier to read**.
+- **Performance Boost** → Runs **10x to 100x faster** than traditional loop-based implementations.
+
+### Practice with NumPy
+
+- Create vectors as **NumPy arrays**, use `np.dot` for dot products, time vectorized vs looped code to observe speedups.
+
+### Key takeaways — L3
+
+- Vectorization turns many scalar ops into a few high-level array ops.
+- Same math, but far fewer Python steps and better hardware utilization.
+- The benefit grows with dimensionality (n) and dataset size.
+
+### Visualization: timeline
+
+![Vectorization timeline](./assets/lecture3-vectorization-timeline.png)
