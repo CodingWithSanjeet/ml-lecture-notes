@@ -3,6 +3,7 @@
 ### Table of Contents
 
 - [Lecture 1: Multiple Features](#lecture-1-multiple-features)
+
   - [Introduction](#introduction)
   - [Notation](#notation)
   - [Training sets](#training-sets)
@@ -19,6 +20,14 @@
     - [Dot Product Expansion](#dot-product-expansion)
   - [Key Points](#key-points)
   - [Terminology](#terminology)
+
+- [Lecture 2: Vectorization Part 1](#lecture-2-vectorization-part-1)
+  - [Overview](#overview)
+  - [Example setup](#example-setup)
+  - [Without vectorization](#without-vectorization)
+  - [With vectorization](#with-vectorization)
+  - [Why vectorization is faster](#why-vectorization-is-faster)
+  - [Key takeaways](#key-takeaways)
 
 <!-- When you add Lecture 2, Lecture 3, ... follow the same pattern:
 
@@ -205,3 +214,78 @@ f_{\vec{w},b}(\vec{x}) = \vec{w} \cdot \vec{x} + b
 - **Multiple linear regression**: linear regression with multiple input features.
 - **Univariate regression**: linear regression with a single feature.
 - Note: The term “multivariate regression” refers to something else (predicting multiple outputs) and is not used here.
+
+## Lecture 2: Vectorization Part 1
+
+### Overview
+
+- Vectorization makes ML code both shorter and much faster by using optimized linear algebra routines (like NumPy) and parallel hardware (CPU SIMD, GPU).
+- Goal: replace explicit per-element operations/loops with math operations on whole vectors/matrices.
+
+### Example setup
+
+```math
+\vec{w} = [w_1, w_2, w_3], \quad b \in \mathbb{R}, \quad \vec{x} = [x_1, x_2, x_3], \quad n=3
+```
+
+- In math, indices often start at 1: \(w_1, w_2, w_3\); in Python/NumPy arrays start at 0: `w[0]`, `w[1]`, `w[2]`.
+
+### Without vectorization
+
+Mathematical form using a summation:
+
+```math
+f_{\vec{w},b}(\vec{x}) =  w_1 x_1 + w_2 x_2 +w_3 x_3 + b
+```
+
+```math
+f_{\vec{w},b}(\vec{x}) = \sum_{j=1}^{n} w_j x_j + b
+```
+
+#### Python (manual multiplication)
+
+```
+f = w[0]*x[0] + w[1]*x[1] + w[2]*x[2] + b
+```
+
+#### Python (using loop)
+
+Naive code (explicit loop; Python ranges are 0..n-1):
+
+```python
+f = 0.0
+for j in range(0, n):
+    f = f + w[j] * x[j]
+f = f + b
+```
+
+This works but scales poorly when n is large (e.g., 100k).
+
+### With vectorization
+
+Use the dot product for the same computation in one line:
+
+```math
+f_{\vec{w},b}(\vec{x}) = \vec{w} \cdot \vec{x} + b
+```
+
+```python
+f = np.dot(w, x) + b
+```
+
+### Why vectorization is faster
+
+NumPy’s dot function is implemented in optimized linear algebra libraries.
+These libraries can:
+
+- Use parallel hardware (multi-core CPUs or GPUs).
+- Perform computations much faster than Python loops.
+
+This becomes especially important when working with large datasets and high-dimensional features.
+
+### Key takeaways
+
+- Vectorization = shorter code + faster execution.
+- Avoid writing manual loops for mathematical operations when possible.
+- Use libraries like NumPy to take advantage of optimized, parallelized operations.
+- Practice writing `np.dot(w, x) + b` instead of manual summations.
