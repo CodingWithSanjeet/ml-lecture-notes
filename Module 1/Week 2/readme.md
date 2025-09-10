@@ -31,6 +31,7 @@
   - [Key takeaways](#key-takeaways)
 
 - [Lecture 3: Vectorization — Part 2](#lecture-3-vectorization--part-2)
+
   - [Introduction](#introduction-1)
   - [Without vectorization (sequential)](#without-vectorization-sequential)
   - [Vectorized execution (parallel)](#vectorized-execution-parallel)
@@ -40,6 +41,17 @@
   - [Practice with NumPy](#practice-with-numpy)
   - [Key takeaways — L3](#key-takeaways--l3)
   - [Visualization: timeline](#visualization-timeline)
+
+- [Lecture 4: Gradient Descent for Multiple Linear Regression](#lecture-4-gradient-descent-for-multiple-linear-regression)
+  - [Overview](#overview-1)
+  - [Multiple Linear Regression in Vector Form](#multiple-linear-regression-in-vector-form)
+  - [Vector notation refresher](#vector-notation-refresher)
+  - [Model and cost (vector form)](#model-and-cost-vector-form)
+  - [Gradient descent updates](#gradient-descent-updates)
+  - [What’s different vs one feature](#whats-different-vs-one-feature)
+  - [From One Feature → Multiple Features](#from-one-feature--multiple-features)
+  - [Alternative: Normal equation](#alternative-normal-equation)
+  - [Practice pointers](#practice-pointers)
 
 <!-- When you add Lecture 2, Lecture 3, ... follow the same pattern:
 
@@ -433,3 +445,119 @@ It can mean the difference between:
 ### Visualization: timeline
 
 ![Vectorization timeline](./assets/lecture3-vectorization-timeline.png)
+
+---
+
+## Lecture 4: Gradient Descent for Multiple Linear Regression
+
+### Overview
+
+Now that we’ve learned about **gradient descent**, **multiple linear regression**, and **vectorization**, let’s put them all together.  
+This gives us an efficient way to train a **multiple linear regression model**.
+
+- We combine: **multiple linear regression** + **vectorization** + **gradient descent**.
+- Treat parameters as a vector $\vec{w}$ and bias as a scalar $b$ to write concise math and fast code.
+
+### Multiple Linear Regression in Vector Form
+
+Instead of treating each parameter $w_1, w_2, \dots, w_n$ separately, we **collect them into a single vector**:
+
+- **$\vec{w}$** = vector of parameters (length \(n\)).
+- **$b$** = bias term (a single number).
+- The prediction function can be written as:
+
+```math
+f_{\vec{w},b}(\vec{x}) = \vec{w} \cdot \vec{x} + b
+```
+
+```math
+\vec{w} = [w_1, \dots, w_n], \quad b \in \mathbb{R}, \quad \vec{x} = [x_1, \dots, x_n]
+```
+
+- The **cost function** is written as:
+
+```math
+J(\vec{w}, b) = \frac{1}{2m} \sum_{i=1}^{m} \Big( f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)} \Big)^2
+```
+
+So instead of writing cost as a function of many separate $w_j$’s, we write it more compactly with the **parameter vector** $\vec{w}$ and the scalar $b$.
+
+![Previous vs vector notation](./assets/lecture4-notation.png)
+
+### Vector notation refresher
+
+```math
+\vec{w} = [w_1, \dots, w_n], \quad b \in \mathbb{R}, \quad \vec{x} = [x_1, \dots, x_n]
+```
+
+### Model and cost (vector form)
+
+```math
+f_{\vec{w},b}(\vec{x}) = \vec{w} \cdot \vec{x} + b
+```
+
+Cost (using m training examples):
+
+```math
+J(\vec{w}, b) = \frac{1}{2m} \sum_{i=1}^{m} \Big( f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)} \Big)^2
+```
+
+### Gradient descent updates
+
+Repeat until **convergence**:
+
+```math
+w_j \leftarrow w_j - \alpha \, \frac{\partial}{\partial w_j} J(\vec{w}, b) \quad (j = 1, \dots, n)
+```
+
+```math
+b \leftarrow b - \alpha \, \frac{\partial}{\partial b} J(\vec{w}, b)
+```
+
+Where the partial derivatives are:
+
+```math
+\frac{\partial}{\partial w_j} J(\vec{w}, b) = \frac{1}{m} \sum_{i=1}^{m} \Big( f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)} \Big) x^{(i)}_j
+```
+
+```math
+\frac{\partial}{\partial b} J(\vec{w}, b) = \frac{1}{m} \sum_{i=1}^{m} \Big( f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)} \Big)
+```
+
+![Gradient descent multi-feature](./assets/lecture4-gd-multi.png)
+
+### What’s different vs one feature
+
+- The error term is still \( f(\vec{x}) - y \).
+- Each step updates all \(w_j\) (for j = 1…n) using their corresponding feature \(x^{(i)}\_j\).
+- Vectorization lets you compute all partial derivatives and updates **in parallel**.
+
+### From One Feature → Multiple Features
+
+- With **one feature**, we only had one update rule for \( w \) and one for \( b \).
+- With **multiple features**, we now have \( n \) parameters:
+  - Update \( w_1, w_2, ..., w_n \).
+  - Update \( b \) as before.
+
+The error term is still:
+
+```math
+(f_{\vec{w}, b}(\vec{x}) - y)
+```
+
+but now it multiplies with **each input feature** \( x_j \) when updating \( w_j \).
+
+### Alternative: Normal equation
+
+- Solves for \(\vec{w}, b\) in one shot (no iterations), but:
+  - Only applies to **linear regression**; doesn’t generalize to other models (e.g., logistic regression, neural nets).
+  - Can be **slow** when number of features is very large.
+  - Often hidden behind the scenes in some ML libraries’ linear regression implementations.
+
+![Normal equation notes](./assets/lecture4-normal-equation.png)
+
+### Practice pointers
+
+- Use **NumPy** for vectorized predictions, cost, and gradients.
+- If NumPy syntax feels new, revisit the earlier vectorization lab for a refresher.
+- Choose **learning rate (α)** and apply feature scaling to make gradient descent converge faster.
