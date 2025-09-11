@@ -43,6 +43,7 @@
   - [Visualization: timeline](#visualization-timeline)
 
 - [Lecture 4: Gradient Descent for Multiple Linear Regression](#lecture-4-gradient-descent-for-multiple-linear-regression)
+
   - [Overview](#overview-1)
   - [Multiple Linear Regression in Vector Form](#multiple-linear-regression-in-vector-form)
   - [Vector notation refresher](#vector-notation-refresher)
@@ -52,6 +53,25 @@
   - [From One Feature → Multiple Features](#from-one-feature--multiple-features)
   - [Alternative: Normal equation](#alternative-normal-equation)
   - [Practice pointers](#practice-pointers)
+
+- [Lecture 5: Feature Scaling Part 1](#lecture-5-feature-scaling-part-1)
+  - [Introduction](#introduction-2)
+  - [Why scaling helps](#why-scaling-helps)
+  - [Example: House Price Prediction](#example-house-price-prediction)
+  - [Parameter Choice and Effect](#parameter-choice-and-effect)
+    - [Case 1: Large w1, small w2](#case-1-large-w1-small-w2)
+    - [Case 2: Small w1, large w2](#case-2-small-w1-large-w2)
+  - [Insight: Feature Ranges Affect Parameter Size](#insight-feature-ranges-affect-parameter-size)
+  - [Effect on Gradient Descent](#effect-on-gradient-descent)
+    - [Scatter Plot of Features](#scatter-plot-of-features)
+    - [Contour Plot of Cost Function](#contour-plot-of-cost-function)
+  - [Feature Scaling](#feature-scaling)
+    - [Idea](#idea)
+    - [Effect](#effect)
+  - [Raw vs Scaled Features](#raw-vs-scaled-features)
+  - [Effect on the Cost Landscape](#effect-on-the-cost-landscape)
+  - [Impact on Gradient Descent](#impact-on-gradient-descent)
+  - [Key Takeaways](#key-takeaways)
 
 <!-- When you add Lecture 2, Lecture 3, ... follow the same pattern:
 
@@ -561,3 +581,139 @@ but now it multiplies with **each input feature** \( x_j \) when updating \( w_j
 - Use **NumPy** for vectorized predictions, cost, and gradients.
 - If NumPy syntax feels new, revisit the earlier vectorization lab for a refresher.
 - Choose **learning rate (α)** and apply feature scaling to make gradient descent converge faster.
+
+---
+
+## Lecture 5: Feature Scaling Part 1
+
+### Introduction
+
+- **Goal:** Improve performance of **Gradient Descent** by using **Feature Scaling**.
+- **Problem:** When features have very different **ranges**, gradient descent converges **slowly**.
+
+### Why scaling helps
+
+- Features with very different ranges (e.g., $x_1$: 300–2000 ft² vs $x_2$: 0–5 bedrooms) lead to **skewed cost contours** and **slow gradient descent**.
+- Scaling puts features on **comparable ranges** (e.g., 0–1), improving step efficiency and convergence speed.
+
+### Example: **House Price** Prediction
+
+- Predicting **house price** using:
+  - `x1`: Size of house (square feet), range **300–2000**
+  - `x2`: Number of bedrooms, range **0–5**
+
+#### Training Example
+
+- House:
+  - `x1 = 2000`, `x2 = 5`
+  - Actual price = **$500,000**
+
+### Parameter Choice and **Effect**
+
+#### Case 1: **Large** `w1`, **small** `w2`
+
+- `w1 = 50`, `w2 = 0.1`, `b = 50`
+- Predicted price:
+
+$$
+price = 50 \times 2000 + 0.1 \times 5 + 50
+$$
+
+$$
+= 100,000k + 0.5k + 50k = 100,050.5k \ (\approx \$100M)
+$$
+
+❌ Very far from the actual price.
+
+#### Case 2: **Small** `w1`, **large** `w2`
+
+- `w1 = 0.1`, `w2 = 50`, `b = 50`
+- Predicted price:
+
+\[
+price = 0.1 \times 2000 + 50 \times 5 + 50
+\]
+\[
+= 200k + 250k + 50k = 500k
+\]
+
+✅ Much more reasonable (matches actual price).
+
+![Feature and parameter values](./assets/lecture5-feature-parameter-values.png)
+
+### Insight: **Feature Ranges** Affect **Parameter Size**
+
+- **Large range feature (size in sq. ft.)** → Small parameter value (`w1 ≈ 0.1`)
+- **Small range feature (# of bedrooms)** → Large parameter value (`w2 ≈ 50`)
+
+  ![Feature size and parameter size](./assets/lecture5-feature-size-parameter-size.png)
+
+### Effect on **Gradient Descent**
+
+#### Scatter Plot of **Features**
+
+- `x1` has a wide range (300–2000)
+- `x2` has a narrow range (0–5)
+
+#### Contour Plot of **Cost Function**
+
+- Contours look like **elongated ellipses**
+- Why?
+  - Small changes in `w1` → large effect on cost `J(w,b)`
+  - Large changes in `w2` needed to affect cost
+
+⚠️ Gradient descent struggles:
+
+- Steps “bounce” back and forth (zig-zag path).
+- Convergence is **slow**.
+
+### **Feature Scaling**
+
+#### **Idea**
+
+- Transform features so they all take on **comparable ranges of values**.
+- Example: Scale both `x1` and `x2` into the range **0–1**.
+
+#### **Effect**
+
+- Contours of cost function become **more circular**.
+- Gradient descent finds a **direct path** to the minimum.
+- ✅ Convergence becomes **much faster**.
+
+![Contuour Plot Scaled vs Unscaled](./assets/lecture5_contours_scaled_unscaled.png)
+
+### **Raw vs Scaled Features**
+
+- Example house: $x_1=2000$, $x_2=5$, price $=500$k.
+- Parameter intuition:
+
+  - When a feature’s range is **large**, its parameter tends to be **small** (e.g., $w_1\approx 0.1$ for size).
+  - When a feature’s range is **small**, its parameter can be **large** (e.g., $w_2\approx 50$ for bedrooms).
+
+  | Row Feature                                         | Scaled Feature                                            |
+  | --------------------------------------------------- | --------------------------------------------------------- |
+  | ![Features raw](./assets/lecture5-features-raw.png) | ![Features scaled](./assets/lecture5-features-scaled.png) |
+
+### Effect on the **Cost Landscape**
+
+- Before scaling: cost contours are **tall and skinny ellipses** (very sensitive to $w_1$, less to $w_2$).
+- After scaling: contours become **more circular**, so descent can head **straight to the minimum**.
+
+| Contours before scaling                                           | Contours after scaling                                          |
+| ----------------------------------------------------------------- | --------------------------------------------------------------- |
+| ![Contours before scaling](./assets/lecture5-contours-before.png) | ![Contours after scaling](./assets/lecture5-contours-after.png) |
+
+### Impact on **Gradient Descent**
+
+- Without scaling, updates can **zig‑zag** and take many iterations.
+- With scaling, updates take **more direct paths**, reducing runtime substantially.
+
+![Feature size and gradient descent](./assets/lecture5-feature-size-gd.png)
+
+### Key Takeaways
+
+- Features with very different scales → gradient descent is inefficient.
+- **Feature scaling** standardizes ranges (e.g., [0,1]) → faster convergence.
+- General rule:
+  - Large feature range → small weight.
+  - Small feature range → large weight.
