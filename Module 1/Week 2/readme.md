@@ -55,6 +55,7 @@
   - [Practice pointers](#practice-pointers)
 
 - [Lecture 5: Feature Scaling Part 1](#lecture-5-feature-scaling-part-1)
+
   - [Introduction](#introduction-2)
   - [Why scaling helps](#why-scaling-helps)
   - [Example: House Price Prediction](#example-house-price-prediction)
@@ -72,6 +73,18 @@
   - [Effect on the Cost Landscape](#effect-on-the-cost-landscape)
   - [Impact on Gradient Descent](#impact-on-gradient-descent)
   - [Key Takeaways](#key-takeaways)
+
+- [Lecture 6: Feature Scaling Part 2](#lecture-6-feature-scaling-part-2)
+  - [Overview](#overview-2)
+  - [Why Scaling?](#why-scaling)
+  - [Methods of Feature Scaling](#methods-of-feature-scaling)
+    - [1. Divide by max](#1-divide-by-max)
+    - [2. Mean normalization](#2-mean-normalization)
+    - [3. Z-score Normalization (Standardization)](#3-z-score-normalization-standardization)
+  - [What ranges are acceptable?](#what-ranges-are-acceptable)
+  - [When to Rescale?](#when-to-rescale)
+  - [Visual Intuition](#visual-intuition)
+  - [Key Takeaways](#key-takeaways-1)
 
 <!-- When you add Lecture 2, Lecture 3, ... follow the same pattern:
 
@@ -261,7 +274,7 @@ f_{\vec{w},b}(\vec{x}) = \vec{w} \cdot \vec{x} + b
 
 ## Lecture 2: Vectorization Part 1
 
-### Overview
+### **Overview**
 
 - Vectorization makes ML code both shorter and much faster by using optimized linear algebra routines (like NumPy) and parallel hardware (CPU SIMD, GPU).
 - Goal: replace explicit per-element operations/loops with math operations on whole vectors/matrices.
@@ -630,12 +643,13 @@ $$
 - `w1 = 0.1`, `w2 = 50`, `b = 50`
 - Predicted price:
 
-\[
+$$
 price = 0.1 \times 2000 + 50 \times 5 + 50
-\]
-\[
+$$
+
+$$
 = 200k + 250k + 50k = 500k
-\]
+$$
 
 ✅ Much more reasonable (matches actual price).
 
@@ -717,3 +731,149 @@ price = 0.1 \times 2000 + 50 \times 5 + 50
 - General rule:
   - Large feature range → small weight.
   - Small feature range → large weight.
+
+---
+
+## Lecture 6: Feature Scaling Part 2
+
+### Overview
+
+- Implement three practical scaling methods and visualize their effects:
+  - **Divide by max** (0–1 scaling)
+  - **Mean normalization** (center around 0, scale by range)
+  - **Z-score normalization** (center and scale by standard deviation)
+
+Run this to generate the figures used below:
+
+```bash
+python scripts/generate_feature_scaling_part2.py
+```
+
+### **Why Scaling?**
+
+- Features may have **different scales** (e.g., income in thousands vs. age in years).
+- **Without scaling**, models may give **higher importance** to **larger‑scaled features**.
+- **Scaling** improves **convergence speed** in **Gradient Descent** and ensures **fair feature contribution**.
+
+### **Methods of Feature Scaling**
+
+#### 1. **Divide by max**
+
+Formula:
+
+```
+x' = x / max(x)
+```
+
+- Scales all values between 0 and 1.
+- Useful when the distribution is not Gaussian and you want bounded values.
+
+- If $x_1 \in [300, 2000]$, use $x_{1,\text{scaled}} = x_1 / 2000$ → $0.15 \le x_{1,\text{scaled}} \le 1$.
+- If $x_2 \in [0, 5]$, use $x_{2,\text{scaled}} = x_2 / 5$ → $0 \le x_{2,\text{scaled}} \le 1$.
+
+![Feature scaling (divide by max)](./assets/lecture6_feature_scaling.png)
+
+![Divide by max](./assets/lecture6_divide_by_max.png)
+
+#### 2. **Mean normalization**
+
+Formula:
+
+```
+x' = (x - μ) / (max - min)
+```
+
+where **μ** = mean of the feature.
+
+##### **Example:**
+
+    μ₁ = 600, range = 2000–300 → x₁' ∈ [-0.18, 0.82]
+    μ₂ = 2.3, range = 5–0 → x₂' ∈ [-0.46, 0.54]
+
+- Compute means $\mu_1, \mu_2$ on the training set.
+- Transform $x_{1,\text{mn}} = (x_1 - \mu_1) / (\max(x_1)-\min(x_1))$.
+- Transform $x_{2,\text{mn}} = (x_2 - \mu_2) / (\max(x_2)-\min(x_2))$.
+- Centers features near 0 with values often in about $[-1, 1]$.
+
+![Mean normalization](./assets/lecture6_mean_norm.png)
+
+![Mean normalization](./assets/lecture6_mean_normalization.png)
+
+#### 3. **Z-score Normalization (Standardization)**
+
+Formula:
+
+```
+x' = (x - μ) / σ
+```
+
+where **σ** = standard deviation.
+
+#### **Example:**
+
+    μ₁ = 600, σ₁ = 450 → x₁' ∈ [-0.67, 3.1]
+    μ₂ = 2.3, σ₂ = 1.4 → x₂' ∈ [-1.6, 1.9]
+
+- Compute means $\mu_j$ and standard deviations $\sigma_j$.
+- Transform $x_{j,\text{z}} = (x_j - \mu_j) / \sigma_j$.
+- Typical values lie within a few standard deviations of 0.
+
+![Z-score normalization](./assets/lecture6_zscore_norm.png)
+
+![Z-score normalization](./assets/lecture6_zscore_normalization.png)
+
+##### What is **standard deviation (σ)**?
+
+- **Standard Deviation (σ)** is a measure of how **spread out** the data is.
+- It tells us how far the values are, on average, from the **mean (μ)**.
+
+**In simple words:**
+
+- If **σ is small**, most values are **close to the mean**.
+- If **σ is large**, the values are **spread out** over a wider range.
+
+**Example:**
+
+```
+Suppose you have house sizes: [1000, 1100, 1200, 1300, 1400]
+Mean (μ) = 1200
+σ = 141 (small → values are close to mean)
+Another set: [500, 1500, 2500, 3500, 4500]
+Mean (μ) = 2500
+σ = 1414 (large → values spread out widely)
+```
+
+![Standard Deviation](./assets/lecture6_standard_deviation_with_sigma.png)
+
+### **What ranges are acceptable?**
+
+- Aim for each feature $x_j$ to land roughly in $[-1, 1]$; $[-3, 3]$ or $[-0.3, 0.3]$ are also fine.
+- If a feature already lies in a compact range (e.g., $[0, 3]$ or $[-2, 0.5]$), scaling is optional.
+
+### **When to Rescale?**
+
+- Rescale if a feature has a **very large** span (e.g., $[-100, 100]$) or is **extremely small** (e.g., $[-0.001, 0.001]$).
+- Rescale domain-specific features like temperature (e.g., 98.6–105°F) to avoid slowing gradient descent.
+- Rule of thumb: aim for values around **[-1, 1]**.
+- In practice, there’s almost never harm in scaling; it often **speeds up convergence** significantly.
+
+![When to rescale](./assets/lecture6_when_to_rescale.png)
+
+### **Visual Intuition**
+
+- **Before scaling**: data points are
+  stretched along one axis.
+- **After scaling**: points become compact
+  and centered → gradient descent works faster.
+
+![Before vs after scaling](./assets/lecture6_visual_intuition.png)
+
+### **Key Takeaways**
+
+- Feature scaling makes training **faster and more stable**.
+- Methods include:
+  - Rescaling (divide by max)
+  - Mean normalization
+  - Z-score normalization
+- Always aim for **similar feature ranges**, ideally around **[-1, 1]**.
+- **When in doubt → Rescale!**
