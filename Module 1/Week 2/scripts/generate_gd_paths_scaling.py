@@ -18,6 +18,9 @@ def contours(ax, a: float, b: float, title: str) -> None:
     ax.set_ylabel("w2")
     ax.set_aspect("equal", adjustable="box")
     ax.grid(alpha=0.2)
+    # Fix axes so plotting the path won't rescale due to overshoot
+    ax.set_xlim(-1.2, 1.2)
+    ax.set_ylim(-1.2, 1.2)
 
 
 def gd_path(a: float, b: float, alpha: float, steps: int = 25, start=(-1.0, 1.0)) -> tuple[np.ndarray, np.ndarray]:
@@ -39,7 +42,8 @@ def build_figure() -> Path:
 
     # Without scaling: elongated contours cause zig-zag
     contours(ax1, a=25.0, b=1.0, title="Without scaling: zig‑zag path")
-    p1x, p1y = gd_path(a=25.0, b=1.0, alpha=0.06, steps=22, start=(-1.0, 1.0))
+    # Choose alpha to cause stable oscillation along steep axis: 0.5/a < alpha < 1/a
+    p1x, p1y = gd_path(a=25.0, b=1.0, alpha=0.03, steps=22, start=(-1.0, 1.0))
     ax1.plot(p1x, p1y, marker="o", markersize=3, color="#d62728")
 
     # With scaling: near circular contours → direct path
