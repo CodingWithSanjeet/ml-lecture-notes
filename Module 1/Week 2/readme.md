@@ -75,6 +75,7 @@
   - [Key Takeaways](#key-takeaways)
 
 - [Lecture 6: Feature Scaling Part 2](#lecture-6-feature-scaling-part-2)
+
   - [Overview](#overview-2)
   - [Why Scaling?](#why-scaling)
   - [Methods of Feature Scaling](#methods-of-feature-scaling)
@@ -85,6 +86,15 @@
   - [When to Rescale?](#when-to-rescale)
   - [Visual Intuition](#visual-intuition)
   - [Key Takeaways](#key-takeaways-1)
+
+- [Lecture 7: Checking Gradient Descent for Convergence](#lecture-7-checking-gradient-descent-for-convergence)
+  - [Overview](#overview-3)
+  - [Why Check Convergence?](#why-check-convergence)
+  - [Learning Curve](#learning-curve)
+  - [What to Expect When It’s Working](#what-to-expect-when-its-working)
+  - [Automatic Convergence Test (ε)](#automatic-convergence-test-ε)
+  - [How Many Iterations?](#how-many-iterations)
+  - [Key Takeaways](#key-takeaways-2)
 
 <!-- When you add Lecture 2, Lecture 3, ... follow the same pattern:
 
@@ -827,6 +837,8 @@ where **σ** = standard deviation.
 - **Standard Deviation (σ)** is a measure of how **spread out** the data is.
 - It tells us how far the values are, on average, from the **mean (μ)**.
 
+  $\Large\text{σ} = \sqrt{\dfrac{\sum\limits_{}^{}{{\lvert x-\mu\rvert^2}}}{N}}$
+
 **In simple words:**
 
 - If **σ is small**, most values are **close to the mean**.
@@ -877,3 +889,80 @@ Mean (μ) = 2500
   - Z-score normalization
 - Always aim for **similar feature ranges**, ideally around **[-1, 1]**.
 - **When in doubt → Rescale!**
+
+---
+
+## Lecture 7: Checking **Gradient Descent** for **Convergence**
+
+### **Overview**
+
+- When running **gradient descent**, it’s important to know if the algorithm is actually **converging** — that is, if it’s finding parameters close to the **global minimum** of the **cost function** **$ J(\vec{w}, b)$**.
+- Goal: make sure **gradient descent** is actually reducing the **$cost J(\vec{w}, b)$** and approaching the **global minimum**.
+- Tool: plot a **learning curve** — cost vs. iterations.
+
+### **Why Check Convergence?**
+
+- **Gradient descent** updates parameters `w` and `b` to minimize the **cost function** **$ J(\vec{w}, b)$**.
+- If gradient descent is working properly:
+  - The **cost J should decrease after every iteration**.
+  - If J **increases** → either:
+    - The **learning rate α (alpha)** is **too large**, or
+    - There’s a **bug in the code**.
+
+### **Learning Curve**
+
+- A **learning curve** plots:
+
+  - **x‑axis** → number of **iterations**
+  - **y‑axis** → **cost** value **$ J(\vec{w}, b)$**
+
+- Plot J on the training set after each iteration (each simultaneous update of w and b).
+
+This helps visualize if gradient descent is progressing.
+
+✅ Example behavior:
+
+- At **100 iterations**, you have certain `w, b` values → compute J → plot that point.
+- At **200 iterations**, new values of `w, b` → new J → next point.
+- Continue plotting to see the **trend**.
+
+Generate the **demo curve**:
+
+```bash
+python scripts/generate_learning_curve.py
+```
+
+![Learning curve with red dashed convergence threshold (ε=0.001); blue pre‑convergence, green post‑convergence](./assets/lecture7_learning_cur.png)
+
+![Learning curve with red dashed convergence threshold (ε=0.001); blue pre‑convergence, green post‑convergence](./assets/lecture7_learning_curve.png)
+
+- Early iterations → steep drop in cost J.
+- Later iterations → curve flattens, showing convergence.
+
+### **What to Expect When It’s Working**
+
+- J should **decrease every iteration** (monotonic downwards). If it **increases**, either **α is too large** or there’s a **bug**.
+- When the curve **levels off** (e.g., by 300–400 iterations in the example), gradient descent has **converged**.
+
+### **Automatic Convergence Test (ε)**
+
+- Choose a small threshold **ε (epsilon)** (e.g., **0.001 = 10⁻³**).
+- If the drop in **J** between two iterations is **≤ ε**, declare **convergence**.
+- Formula:
+  ```math
+  | J(t) - J(t+1) | < ε  →  Convergence
+  ```
+- In practice, picking ε is tricky — visually checking the curve is often more reliable.
+
+### **How Many Iterations?**
+
+- It varies widely: could be **30**, **1,000**, or **100,000+** depending on the problem and scaling.
+- That’s why plotting the **learning curve** is useful to decide **when to stop training**.
+
+### **Key Takeaways**
+
+- Always **plot cost J vs. iterations** to check **convergence**.
+- **J should decrease monotonically** (downwards only).
+- If **J increases** → **α (learning rate)** may be **too high**, or there’s a **bug**.
+- Gradient descent **converges** when **J levels off** (flattens).
+- Automatic tests with **ε** exist, but **graphs are usually clearer**.
