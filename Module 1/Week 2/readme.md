@@ -88,6 +88,7 @@
   - [Key Takeaways](#key-takeaways-1)
 
 - [Lecture 7: Checking Gradient Descent for Convergence](#lecture-7-checking-gradient-descent-for-convergence)
+
   - [Overview](#overview-3)
   - [Why Check Convergence?](#why-check-convergence)
   - [Learning Curve](#learning-curve)
@@ -95,6 +96,14 @@
   - [Automatic Convergence Test (ε)](#automatic-convergence-test-ε)
   - [How Many Iterations?](#how-many-iterations)
   - [Key Takeaways](#key-takeaways-2)
+
+- [Lecture 8: Choosing the Learning Rate](#lecture-8-choosing-the-learning-rate)
+  - [Overview](#overview-4)
+  - [Symptoms of a bad learning rate](#symptoms-of-a-bad-learning-rate)
+  - [Debugging tip: use a tiny α](#debugging-tip-use-a-tiny-α)
+  - [Try a range of α values (~3× steps)](#try-a-range-of-α-values-3-steps)
+  - [Guidelines to pick α](#guidelines-to-pick-α)
+  - [Visualization](#visualization)
 
 <!-- When you add Lecture 2, Lecture 3, ... follow the same pattern:
 
@@ -966,3 +975,66 @@ python scripts/generate_learning_curve.py
 - If **J increases** → **α (learning rate)** may be **too high**, or there’s a **bug**.
 - Gradient descent **converges** when **J levels off** (flattens).
 - Automatic tests with **ε** exist, but **graphs are usually clearer**.
+
+---
+
+## Lecture 8: Choosing the Learning Rate
+
+### Overview
+
+- Gradient descent is sensitive to the **learning rate** (α). Choosing an appropriate learning rate is crucial for your learning algorithm to **converge efficiently**.
+- Training works best with a well‑chosen **learning rate (α)**.
+- **Too small α** → training is **slow**; **too large α** → training can **oscillate** or **diverge**.
+
+### Symptoms of a bad learning rate
+
+- Cost **J** sometimes goes **up and down** between iterations → likely **α too large** or a **bug**.
+
+  ![Oscillating cost: J sometimes goes up and down between iterations (too‑large α or bug)](./assets/lecture8_cost_oscillation.png)
+
+- Cost **J** increases **every** iteration → often **α too large**, but also check for a **sign error**.
+
+```math
+\textbf{Correct update:}\quad w_j \leftarrow w_j - \alpha\,\frac{\partial}{\partial w_j} J(\vec{w}, b)
+```
+
+```math
+\textbf{Incorrect update (sign error):}\quad w_j \leftarrow w_j + \alpha\,\frac{\partial}{\partial w_j} J(\vec{w}, b)
+```
+
+![Increasing cost: J rises every iteration (sign error or too‑large α)](./assets/lecture8_cost_increasing.png)
+
+### Debugging tip: use a tiny α
+
+- With a **small enough α**, the cost **should decrease on every iteration**.
+- If not, even with tiny α, there is likely a **bug** in the code.
+  ```text
+  w_1 = w_1 + α * derivative   # Wrong
+  w_1 = w_1 - α * derivative   # Correct
+  ```
+- **Tip**: Set **α** to a **very small** value:
+  - If **J decreases consistently** → gradient descent is implemented **correctly**.
+  - If **J still increases** sometimes → likely a **bug** in the code.
+
+⚠️ Tiny α is for **debugging only**; it’s usually too slow for real training.
+
+![Increasing cost: J rises every iteration (sign error or too‑large α)](./assets/lecture8_debugging_lr.png)
+
+### Try a range of α values (~3× steps)
+
+- Try a ladder of values, each about **3×** the previous: `0.001 → 0.003 → 0.01 → 0.03 → 0.1 → 0.3 → 1`.
+- For each **α**, run a **few iterations** and plot **J vs. iterations**.
+- Choose an **α** that decreases **J** **rapidly** and **consistently** (no oscillations or divergence).
+
+![Learning‑rate ladder (~3×): multiple J curves for α values](./assets/lecture8_learning_rate_values.png)
+![Learning‑rate ladder (~3×): multiple J curves for α values](./assets/lecture8_alpha_ladder.png)
+
+### Guidelines to pick α
+
+- Identify one **too small** α and one **too large** α.
+- Pick an **α slightly below** the largest value that still **converges smoothly**.
+- Apply **feature scaling** to make selection easier and convergence faster.
+
+### Visualization
+
+![Learning‑rate choices: examples of α too small/too big/just right, plus ~3× trial ladder](./assets/lecture8_learning_rate.png)
